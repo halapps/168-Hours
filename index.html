@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>168 Hours</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+/* === CSS Variables === */
+:root {
+  --bg-primary: #fafaf9;
+  --bg-secondary: #f5f5f4;
+  --bg-card: #ffffff;
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-muted: #a8a29e;
+  --border: #e7e5e4;
+  --border-hover: #d6d3d1;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* === Reset === */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* === Base === */
+html {
+  font-size: 14px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  /* Prevent pull-to-refresh on iOS */
+  overscroll-behavior: none;
+  /* Safe area padding for notched devices */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* === App Layout === */
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* === Version === */
+#version {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 0.5rem;
+  padding-left: max(0.5rem, env(safe-area-inset-left));
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 1000;
+  line-height: 1;
+  user-select: none;
+}
+
+
+/* === Header === */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  padding-top: max(1rem, env(safe-area-inset-top));
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.logo span {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.logo .tagline {
+  font-weight: 400;
+  color: var(--text-secondary);
+  font-size: 0.9em;
+  margin-left: 0.25em;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* === Buttons === */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--border-hover);
+  background: var(--bg-secondary);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-icon {
+  padding: 0.5rem;
+  width: 36px;
+  height: 36px;
+}
+
+.btn-labeled {
+  flex-direction: column;
+  padding: 0.375rem 0.5rem;
+  min-width: 48px;
+  gap: 0.125rem;
+}
+
+.btn-labeled span {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+}
+
+.btn-labeled:hover span {
+  color: var(--text-primary);
+}
+
+.btn-labeled.active span,
+.btn-labeled.btn-danger span {
+  color: inherit;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn-danger {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: transparent;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--danger);
+  color: white;
+}
+
+.btn-add {
+  width: 100%;
+  border-style: dashed;
+  color: var(--text-secondary);
+}
+
+.btn-icon.active,
+.btn-labeled.active {
+  background: var(--text-primary);
+  color: var(--bg-card);
+  border-color: var(--text-primary);
+}
+
+.btn-icon.active:hover:not(:disabled),
+.btn-labeled.active:hover:not(:disabled) {
+  background: var(--text-secondary);
+  border-color: var(--text-secondary);
+}
+
+/* === Main Layout === */
+.main {
+  display: flex;
+  flex: 1;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  overflow: auto;
+}
+
+/* === Sidebar === */
+.sidebar {
+  width: var(--sidebar-width, 280px);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+}
+
+.sidebar-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-toggle:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-secondary);
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* === Resize Handle === */
+.resize-handle {
+  width: 4px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  transition: background 0.15s ease;
+  position: relative;
+}
+
+.resize-handle:hover {
+  background: var(--border);
+}
+
+.resize-handle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--border);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.resize-handle:hover::after {
+  opacity: 1;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 220px);
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.category-item:hover {
+  background: var(--bg-secondary);
+}
+
+.category-item.active {
+  background: var(--bg-secondary);
+  box-shadow: inset 0 0 0 2px var(--text-primary);
+}
+
+.category-color {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.category-color::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.category-color::-webkit-color-swatch {
+  border: none;
+  border-radius: var(--radius-sm);
+}
+
+.category-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.category-name {
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.category-name-input {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  padding: 0;
+}
+
+.category-stats {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+.category-randomize,
+.category-edit,
+.category-delete {
+  opacity: 0;
+  padding: 0.25rem;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.category-item:hover .category-randomize,
+.category-item:hover .category-edit,
+.category-item:hover .category-delete {
+  opacity: 1;
+}
+
+.category-randomize:hover {
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.category-edit:hover {
+  color: var(--accent);
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.category-delete:hover {
+  color: var(--danger);
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.week-start-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+}
+
+.week-start-setting {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.week-start-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  min-width: 5rem;
+}
+
+.week-start-select {
+  flex: 1;
+  padding: 0.375rem 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+}
+
+.week-start-select:hover {
+  border-color: var(--border-hover);
+}
+
+.week-start-select:focus {
+  border-color: var(--accent);
+}
+
+/* === Grid Container === */
+/* Letter paper: 8.5" x 11" = aspect ratio 0.773 */
+.grid-container {
+  width: min(100%, 680px);
+  aspect-ratio: 8.5 / 11;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.grid-header {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.hour-label-spacer {
+  width: 36px;
+  flex-shrink: 0;
+}
+
+.day-labels {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  flex: 1;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+  padding: 0.5rem 0;
+}
+
+.grid-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.hour-labels {
+  width: 36px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding-top: 1px;
+}
+
+.hour-label {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-right: 0.5rem;
+  padding-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* === Grid === */
+.grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(24, 1fr);
+  gap: 1px;
+  background: var(--border);
+  padding: 1px;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  /* Header adjustments */
+  .header {
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+  }
+  
+  .logo {
+    font-size: 1.25rem;
+  }
+  
+  .header-actions {
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .btn-labeled {
+    padding: 0.25rem 0.375rem;
+    min-width: 44px;
+    font-size: 0.75rem;
+  }
+  
+  .btn-labeled span {
+    font-size: 0.5rem;
+  }
+  
+  /* Main layout */
+  .main {
+    padding: 1rem;
+    gap: 1rem;
+    flex-direction: column;
+  }
+  
+  /* Sidebar on mobile */
+  .sidebar {
+    width: 100% !important;
+    max-width: 100%;
+  }
+  
+  .sidebar-toggle {
+    display: flex;
+    position: static;
+    align-self: flex-end;
+    margin-bottom: 0.5rem;
+  }
+  
+  .sidebar.collapsed .sidebar-content {
+    display: none;
+  }
+  
+  .resize-handle {
+    display: none;
+  }
+  
+  /* Grid adjustments */
+  .grid-body {
+    height: calc(100% * 23.5 / 24);
+  }
+  
+  .grid {
+    gap: 0.5px;
+    padding: 0.5px;
+  }
+  
+  /* Prevent text selection on cells during drag */
+  .cell {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Allow text selection in inputs and textareas */
+  input,
+  textarea,
+  button {
+    -webkit-user-select: auto;
+    user-select: auto;
+  }
+  
+  /* Two-column category layout on mobile */
+  .legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+    max-height: none;
+  }
+  
+  .category-item {
+    padding: 0.375rem;
+    gap: 0.375rem;
+  }
+  
+  .category-name {
+    font-size: 10px;
+  }
+  
+  .category-stats {
+    font-size: 0.625rem;
+  }
+  
+  .category-color {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.cell {
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: filter 0.1s ease;
+  position: relative;
+  overflow: visible;
+}
+
+.cell:hover {
+  filter: brightness(0.92);
+}
+
+.cell-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  white-space: nowrap;
+  text-align: center;
+  z-index: 1;
+}
+
+/* === Tracking Mode (Screen) === */
+/* Hidden by default - shown when tracking mode is active */
+.cell-tracking-top,
+.cell-tracking-bottom {
+  display: none;
+}
+
+/* When tracking mode is active, show the split layout on screen */
+.tracking-mode .cell {
+  display: flex;
+  flex-direction: column;
+  background: transparent !important;
+}
+
+/* Hide the centered region labels when in tracking mode */
+.tracking-mode .cell-label {
+  display: none;
+}
+
+/* Show tracking structure on screen */
+.tracking-mode .cell-tracking-top,
+.tracking-mode .cell-tracking-bottom {
+  display: flex;
+}
+
+.tracking-mode .cell-tracking-top {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.tracking-mode .cell-tracking-label {
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  padding: 0 4px;
+}
+
+.tracking-mode .cell-tracking-bottom {
+  flex: 1;
+  align-items: center;
+  background: var(--bg-card);
+  padding: 0 4px;
+  gap: 4px;
+}
+
+.tracking-mode .cell-tracking-checkbox {
+  font-size: 12px;
+  line-height: 1;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.tracking-mode .cell-tracking-line {
+  flex: 1;
+  border-bottom: 1px solid var(--border);
+  height: 50%;
+}
+
+/* === Dialog === */
+.dialog {
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md), 0 0 0 1px var(--border);
+  max-width: 320px;
+  width: 100%;
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.dialog h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 0.375rem;
+}
+
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.form-group input[type="text"]:focus {
+  border-color: var(--accent);
+}
+
+.form-group input[type="color"] {
+  width: 100%;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+/* === Scrollbar === */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* === Print Styles === */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 0.25in;
+  }
+
+  /* Hide interactive elements */
+  .header-actions,
+  .sidebar,
+  .resize-handle,
+  .btn,
+  .category-randomize,
+  .category-edit,
+  .category-delete,
+  .category-color,
+  .dialog {
+    display: none !important;
+  }
+
+  /* Reset layout for print */
+  body {
+    background: white;
+    font-size: 10px;
+    min-height: auto;
+    height: auto;
+  }
+
+  #app {
+    min-height: auto;
+    height: auto;
+  }
+
+  .header {
+    position: static;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #000;
+    margin-bottom: 0.25rem;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+
+  .main {
+    display: block;
+    padding: 0;
+    overflow: visible;
+  }
+
+  /* Print grid sizing - fill page exactly */
+  .grid-container {
+    width: 100% !important;
+    max-width: none !important;
+    aspect-ratio: auto !important;
+    height: auto !important;
+    border: 1px solid #000;
+    border-radius: 0;
+    page-break-inside: avoid;
+    box-shadow: none;
+  }
+
+  .grid-header {
+    background: white;
+    border-bottom: 1px solid #000;
+  }
+
+  .hour-label-spacer {
+    width: 28px;
+  }
+
+  .day-labels {
+    font-size: 0.7rem;
+    padding: 0.4rem 0;
+  }
+
+  .grid-body {
+    overflow: visible;
+  }
+
+  .hour-labels {
+    width: 28px;
+    background: white;
+    border-right: 1px solid #000;
+    gap: 0;
+    padding-top: 0;
+  }
+
+  .hour-label {
+    font-size: 0.5rem;
+    padding-right: 0.2rem;
+    padding-top: 0;
+    flex: none;
+    height: 32px;
+  }
+
+  .grid {
+    gap: 0;
+    background: white;
+    padding: 0;
+    grid-template-rows: repeat(24, 32px) !important;
+  }
+
+  .cell {
+    background: white;
+    border: 0.5px solid #ccc;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cell-label {
+    font-size: 8px;
+    font-weight: 600;
+  }
+
+  /* === Tracking Mode (Print) === */
+  /* Adjust sizes for print */
+  .tracking-mode .cell-tracking-label {
+    font-size: 5px;
+    font-weight: 600;
+    padding: 0 1px;
+  }
+
+  .tracking-mode .cell-tracking-bottom {
+    background: white !important;
+    padding: 0 1px;
+    gap: 1px;
+  }
+
+  .tracking-mode .cell-tracking-checkbox {
+    font-size: 7px;
+    color: #000;
+  }
+
+  .tracking-mode .cell-tracking-line {
+    border-bottom-color: #999;
+  }
+
+  /* Hide legend in print - can be separate page if needed */
+  .legend {
+    display: none !important;
+  }
+
+  /* Ensure colors print */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Remove shadows and transitions */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transition: none !important;
+  }
+}
+
+
+  </style>
+</head>
+<body>
+<div id="app">
+    <header class="header">
+      <h1 class="logo">168<span>hours</span><span class="tagline">this week — spend them deliberately</span></h1>
+      <div class="header-actions">
+        <button id="undo-btn" class="btn btn-labeled" title="Undo" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 10h10a5 5 0 0 1 5 5v2M3 10l5 5M3 10l5-5"/>
+          </svg>
+          <span>Undo</span>
+        </button>
+        <button id="redo-btn" class="btn btn-labeled" title="Redo" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10H11a5 5 0 0 0-5 5v2M21 10l-5 5M21 10l-5-5"/>
+          </svg>
+          <span>Redo</span>
+        </button>
+        <button id="eraser-btn" class="btn btn-labeled" title="Eraser">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/>
+            <path d="M22 21H7"/>
+            <path d="m5 11 9 9"/>
+          </svg>
+          <span>Eraser</span>
+        </button>
+        <button id="erase-all-btn" class="btn btn-labeled btn-danger" title="Erase All">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/>
+            <path d="M22 21H7"/>
+            <path d="m5 11 9 9"/>
+          </svg>
+          <span>Clear All</span>
+        </button>
+        <button id="copy-summary-btn" class="btn btn-labeled" title="Copy ASCII Summary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span>Copy</span>
+        </button>
+        <button id="export-png-btn" class="btn btn-labeled" title="Save as PNG">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>PNG</span>
+        </button>
+        <button id="tracking-mode-btn" class="btn btn-labeled" title="Toggle Tracking Mode (for printing)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+          <span>Track</span>
+        </button>
+        <button id="export-calendar-btn" class="btn btn-labeled" title="Export Calendar (Copy)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <span>Export</span>
+        </button>
+        <button id="import-calendar-btn" class="btn btn-labeled" title="Import Calendar (Paste)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Import</span>
+        </button>
+        <button id="share-btn" class="btn btn-labeled" title="Copy Link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          <span>Share</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main">
+      <aside class="sidebar">
+        <button id="sidebar-toggle" class="sidebar-toggle" title="Toggle categories">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M3 6h18M3 18h18"/>
+          </svg>
+        </button>
+        <div class="sidebar-content">
+          <div class="legend" id="legend"></div>
+          <button id="add-category-btn" class="btn btn-add">Add Category</button>
+          <button id="reset-categories-btn" class="btn btn-danger" style="margin-top: 0.5rem;">Reset Categories and Data</button>
+          <div class="week-start-section">
+            <div class="week-start-setting">
+              <label class="week-start-label">Week starts on</label>
+              <select id="week-start-select" class="week-start-select">
+                <option value="1">Monday</option>
+                <option value="2">Tuesday</option>
+                <option value="3">Wednesday</option>
+                <option value="4">Thursday</option>
+                <option value="5">Friday</option>
+                <option value="6">Saturday</option>
+                <option value="7">Sunday</option>
+              </select>
+            </div>
+            <div class="week-start-setting">
+              <label class="week-start-label">Day starts at</label>
+              <select id="day-start-select" class="week-start-select">
+                <option value="0">12am</option>
+                <option value="1">1am</option>
+                <option value="2">2am</option>
+                <option value="3">3am</option>
+                <option value="4">4am</option>
+                <option value="5" selected>5am</option>
+                <option value="6">6am</option>
+                <option value="7">7am</option>
+                <option value="8">8am</option>
+                <option value="9">9am</option>
+                <option value="10">10am</option>
+                <option value="11">11am</option>
+                <option value="12">12pm</option>
+                <option value="13">1pm</option>
+                <option value="14">2pm</option>
+                <option value="15">3pm</option>
+                <option value="16">4pm</option>
+                <option value="17">5pm</option>
+                <option value="18">6pm</option>
+                <option value="19">7pm</option>
+                <option value="20">8pm</option>
+                <option value="21">9pm</option>
+                <option value="22">10pm</option>
+                <option value="23">11pm</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <div class="resize-handle" id="resize-handle"></div>
+
+      <section class="grid-container">
+        <div class="grid-header">
+          <div class="hour-label-spacer"></div>
+          <div class="day-labels" id="day-labels"></div>
+        </div>
+        <div class="grid-body">
+          <div class="hour-labels" id="hour-labels"></div>
+          <div class="grid" id="grid"></div>
+        </div>
+    </main>
+  </div>
+  <div id="version"></div>
+
+  <dialog id="category-dialog" class="dialog">
+    <form method="dialog">
+      <h2 id="dialog-title">Add Category</h2>
+      <div class="form-group">
+        <label for="category-name">Name</label>
+        <input type="text" id="category-name" required maxlength="20" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="category-color">Color</label>
+        <input type="color" id="category-color">
+      </div>
+      <div class="dialog-actions">
+        <button type="button" class="btn" id="dialog-cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="dialog-submit">Add</button>
+      </div>
+    </form>
+  </dialog>
+  <script>
+var j="unassigned";function rJ(){let J=Math.random(),Q=0.65+Math.random()*0.2,Z=0.45+Math.random()*0.15,q=Q*Math.min(Z,1-Z),K=(X)=>{let M=(X+J*12)%12,O=Z-q*Math.max(Math.min(M-3,9-M,1),-1);return Math.round(255*O).toString(16).padStart(2,"0")};return`#${K(0)}${K(8)}${K(4)}`}var a=[{id:"unassigned",name:"Unassigned",color:"#9ca3af"},{id:"sleep",name:"Sleep",color:"#6366f1"},{id:"work",name:"Work",color:"#10b981"},{id:"personal",name:"Personal",color:"#f59e0b"},{id:"exercise",name:"Exercise",color:"#ef4444"}];function u(){return{categories:[...a.map((J)=>({...J}))],grid:Array(168).fill("unassigned"),activeCategoryId:"unassigned",eraserMode:!1,trackingMode:!1}}function e(){return{past:[],future:[]}}function JJ(J,Q=!1){let q={grid:Array.isArray(J.grid)&&J.grid.length===168?[...J.grid]:Array(168).fill("unassigned")};if(Q&&Array.isArray(J.categories)&&J.categories.length>0)q.categories=J.categories.map((K)=>({...K}));return q}function I(J,Q){return J.categories.find((Z)=>Z.id===Q)}function b(J,Q){return J.grid.filter((Z)=>Z===Q).length}function jJ(J,Q){let Z=[...J.past,{grid:[...Q]}];if(Z.length>50)Z.shift();return{past:Z,future:[]}}function p(J,Q){if(!Q||typeof Q!=="object")return console.warn("pushHistoryWithCategories: invalid state, using empty history"),{past:Array.isArray(J?.past)?J.past:[],future:[]};try{let Z=JJ(Q,!0),K=[...Array.isArray(J?.past)?J.past:[],Z];if(K.length>50)K.shift();return{past:K,future:[]}}catch(Z){return console.error("pushHistoryWithCategories error:",Z),{past:Array.isArray(J?.past)?J.past:[],future:[]}}}function r(J,Q,Z,q){if(Z<0||Z>=168)return{state:J,history:Q};if(J.grid[Z]===q)return{state:J,history:Q};let K=jJ(Q,J.grid),X=[...J.grid];return X[Z]=q,{state:{...J,grid:X},history:K}}function GJ(J,Q,Z){if(Z<0||Z>=168)return{state:J,history:Q};if(J.eraserMode)return r(J,Q,Z,"unassigned");if(J.grid[Z]===J.activeCategoryId)return r(J,Q,Z,"unassigned");return r(J,Q,Z,J.activeCategoryId)}function NJ(J,Q,Z,q,K){if(!J||typeof J!=="object")J=u();let X=Array.isArray(J.grid)&&J.grid.length===168?[...J.grid]:Array(168).fill("unassigned"),M={categories:Array.isArray(J.categories)?J.categories:[],grid:X,activeCategoryId:J.activeCategoryId||"unassigned",eraserMode:J.eraserMode||!1,trackingMode:J.trackingMode||!1},O={past:Array.isArray(Q?.past)?Q.past:[],future:Array.isArray(Q?.future)?Q.future:[]},Y=p(O,M),V=K;if(!V||typeof V!=="string")try{V=rJ()}catch(U){console.warn("randomColor() failed, using default:",U),V="#9ca3af"}if(typeof Z!=="string")throw console.error("addCategory: id must be a string, got:",typeof Z,Z),Error(`Invalid id parameter: expected string, got ${typeof Z}`);if(typeof q!=="string")throw console.error("addCategory: name must be a string, got:",typeof q,q),Error(`Invalid name parameter: expected string, got ${typeof q}`);if(q===Z)throw console.error("BUG DETECTED: name and id are the same!",{id:Z,name:q,color:V}),Error(`Category name "${q}" equals the id - this is a bug!`);let F={id:Z,name:q,color:V},G=Array.isArray(M.categories)?[...M.categories,F]:[F];if(F.name!==q||F.id!==Z)console.error("BUG: Category properties don't match inputs!",{inputId:Z,inputName:q,categoryId:F.id,categoryName:F.name});return{state:{categories:G,grid:X,activeCategoryId:M.activeCategoryId,eraserMode:M.eraserMode,trackingMode:M.trackingMode},history:Y}}function RJ(J,Q,Z,q){let K=p(Q,J);return{state:{...J,categories:J.categories.map((X)=>X.id===Z?{...X,name:q}:X)},history:K}}function QJ(J,Q,Z,q){let K=p(Q,J);return{state:{...J,categories:J.categories.map((X)=>X.id===Z?{...X,color:q}:X)},history:K}}function PJ(J,Q,Z){if(Z==="unassigned")return{state:J,history:Q};if(!I(J,Z))return{state:J,history:Q};let q=p(Q,J),K=J.grid.map((O)=>O===Z?"unassigned":O),X=J.categories.filter((O)=>O.id!==Z),M=J.activeCategoryId===Z?"unassigned":J.activeCategoryId;return{state:{...J,categories:X,grid:K,activeCategoryId:M},history:q}}function LJ(J){if(Array.isArray(J))return{grid:J};if(!J||!Array.isArray(J.grid))return{grid:Array(168).fill("unassigned")};return J}function kJ(J,Q){if(Q.past.length===0)return{state:J,history:Q};let Z=[...Q.past],q=LJ(Z.pop());return{state:{...J,grid:q.grid,...q.categories?{categories:q.categories.map((X)=>({...X}))}:{}},history:{past:Z,future:[JJ(J,!0),...Q.future]}}}function _J(J,Q){if(Q.future.length===0)return{state:J,history:Q};let Z=[...Q.future],q=LJ(Z.shift());return{state:{...J,grid:q.grid,...q.categories?{categories:q.categories.map((X)=>({...X}))}:{}},history:{past:[...Q.past,JJ(J,!0)],future:Z}}}function ZJ(J){try{localStorage.setItem("168hours",JSON.stringify(J))}catch{console.warn("Failed to save state to localStorage")}}function qJ(){try{let J=localStorage.getItem("168hours");if(!J)return null;let Q=JSON.parse(J);if(!Array.isArray(Q.grid)||Q.grid.length!==168||!Array.isArray(Q.categories))return null;if(!Q.categories.find((Z)=>Z.id==="unassigned"))Q.categories.unshift({id:"unassigned",name:"Unassigned",color:"#9ca3af"});if(typeof Q.trackingMode!=="boolean")Q.trackingMode=!1;return Q}catch{return null}}function HJ(J,Q){let Z=jJ(Q,J.grid);return{state:{...J,grid:Array(168).fill("unassigned")},history:Z}}function AJ(J,Q){let Z=new Set(a.map((O)=>O.id)),q=p(Q,J),K=Array(168).fill("unassigned"),X=[...a.map((O)=>({...O}))],M="unassigned";if(typeof J.activeCategoryId==="string"&&Z.has(J.activeCategoryId))M=J.activeCategoryId;return{state:{...J,categories:X,grid:K,activeCategoryId:M,eraserMode:!1,trackingMode:J.trackingMode??!1},history:q}}var aJ="2",t="168h:";function tJ(J){let Q=[];if(J.length===0)return Q;let Z=J[0],q=1;for(let K=1;K<J.length;K++)if(J[K]===Z)q++;else Q.push([q,Z]),Z=J[K],q=1;return Q.push([q,Z]),Q}function eJ(J){let Q=[];for(let[Z,q]of J)for(let K=0;K<Z;K++)Q.push(q);return Q}function JQ(J){return J.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}function QQ(J){let Q=J.replace(/-/g,"+").replace(/_/g,"/");while(Q.length%4)Q+="=";return Q}function fJ(J){let Q=tJ(J.grid),Z={version:aJ,categories:J.categories,grid:Q},q=JSON.stringify(Z),K=btoa(q),X=JQ(K);return`${t}${X}`}function EJ(J){try{if(!J.startsWith(t))return null;let Q=J.slice(t.length),Z;try{let M=QQ(Q);Z=atob(M)}catch{try{Z=atob(Q)}catch{return null}}let q=JSON.parse(Z),K;if(q.version==="2"&&Array.isArray(q.grid)&&q.grid.length>0&&Array.isArray(q.grid[0]))K=eJ(q.grid);else if(q.version==="1"&&Array.isArray(q.grid))K=q.grid;else return null;if(!q.version||!Array.isArray(q.categories)||K.length!==168)return null;if(!q.categories.find((M)=>M.id==="unassigned"))q.categories.unshift({id:"unassigned",name:"Unassigned",color:"#9ca3af"});let X=new Set(q.categories.map((M)=>M.id));for(let M=0;M<K.length;M++)if(!X.has(K[M]))K[M]="unassigned";return{categories:q.categories,grid:K,activeCategoryId:"unassigned",eraserMode:!1,trackingMode:!1}}catch{return null}}function ZQ(J){let Q=J.slice(1).match(/.{2}/g);if(!Q||Q.length!==3)return 0;let Z=Q.map((q)=>{let K=parseInt(q,16)/255;return K<=0.03928?K/12.92:Math.pow((K+0.055)/1.055,2.4)});return 0.2126*Z[0]+0.7152*Z[1]+0.0722*Z[2]}function XJ(J){return ZQ(J)>0.4}var BJ="first-day-of-week";function qQ(){try{let Q=new Intl.Locale(navigator.language);if("weekInfo"in Q){let Z=Q.weekInfo;if(Z&&typeof Z.firstDay==="number")return Z.firstDay}}catch{}let J=navigator.language.toLowerCase();if(J.startsWith("en-us")||J.startsWith("en-ca")||J.startsWith("en-au")||J.startsWith("ja"))return 7;return 1}function KQ(){let J=localStorage.getItem(BJ);if(J){let Q=parseInt(J,10);if(Q>=1&&Q<=7)return Q}return qQ()}function XQ(J){if(J>=1&&J<=7)localStorage.setItem(BJ,String(J)),y=J}var y=null;function i(){if(y===null)y=KQ();return y}var DJ="day-start-time",zQ=4;function MQ(){let J=localStorage.getItem(DJ);if(J){let Q=parseInt(J,10);if(Q>=0&&Q<=23)return Q}return zQ}function OQ(J){if(J>=0&&J<=23)localStorage.setItem(DJ,String(J)),c=J}var c=null;function o(){if(c===null)c=MQ();return c}function IJ(J){let Q=i();return((Q===7?6:Q-1)+J)%7}function VQ(J){let Q=i(),Z=Q===7?6:Q-1;return(J-Z+7)%7}function YQ(){let J=i(),Q=new Intl.DateTimeFormat(navigator.language,{weekday:"short"}),Z=[],q=new Date(2024,0,1),K=J===7?6:J-1;for(let X=0;X<7;X++){let M=(K+X)%7,O=new Date(q);O.setDate(q.getDate()+M),Z.push(Q.format(O))}return Z}function g(J,Q){let Z=o(),q=(J+Z)%24;return IJ(Q)*24+q}function $(J){let Q=Math.floor(J/24),Z=J%24,q=o(),K=(Z-q+24)%24,X=VQ(Q);return{row:K,col:X}}function FQ(J){let{row:Q,col:Z}=$(J),q=[];if(Q>0)q.push(g(Q-1,Z));if(Q<23)q.push(g(Q+1,Z));if(Z>0)q.push(g(Q,Z-1));if(Z<6)q.push(g(Q,Z+1));return q}function WQ(J){let Q=new Set,Z=[];if(!J||J.length!==168)return[];for(let q=0;q<168;q++){if(Q.has(q))continue;let K=J[q];if(K===void 0)continue;if(K===j){Q.add(q);continue}let X=new Set,M=[q];while(M.length>0){let O=M.pop();if(Q.has(O))continue;if(J[O]!==K)continue;Q.add(O),X.add(O);for(let Y of FQ(O))if(!Q.has(Y)&&J[Y]===K)M.push(Y)}if(X.size>=2){let O=0,Y=0;for(let R of X){let{row:m,col:s}=$(R);O+=m,Y+=s}let V=O/X.size,F=Y/X.size,G=q,U=1/0;for(let R of X){let{row:m,col:s}=$(R),UJ=Math.pow(m-V,2)+Math.pow(s-F,2);if(UJ<U)U=UJ,G=R}let L=Math.round(V),v=[...X].filter((R)=>$(R).row===L),D=1;if(v.length>0){let R=v.map((m)=>$(m).col);D=Math.max(...R)-Math.min(...R)+1}Z.push({categoryId:K,cells:X,centerIndex:G,colSpan:D})}}return Z}var z=qJ()??u(),W=e(),l=document.getElementById("grid"),h=document.getElementById("legend"),vJ=document.getElementById("hour-labels"),TJ=document.getElementById("day-labels"),bJ=document.getElementById("undo-btn"),CJ=document.getElementById("redo-btn"),UQ=document.getElementById("erase-all-btn"),x=document.getElementById("copy-summary-btn"),P=document.getElementById("export-png-btn"),k=document.getElementById("export-calendar-btn"),S=document.getElementById("import-calendar-btn"),xJ=document.getElementById("eraser-btn"),jQ=document.getElementById("add-category-btn"),GQ=document.getElementById("reset-categories-btn"),T=document.getElementById("category-dialog"),NQ=document.getElementById("dialog-title"),SJ=document.getElementById("dialog-submit"),RQ=document.getElementById("dialog-cancel"),zJ=document.getElementById("category-name"),mJ=document.getElementById("category-color"),PQ=document.getElementById("resize-handle"),VJ=document.querySelector(".sidebar"),_=document.getElementById("sidebar-toggle"),wJ=document.querySelector(".grid-container"),MJ=document.getElementById("week-start-select"),OJ=document.getElementById("day-start-select"),A=document.getElementById("version"),pJ=document.getElementById("tracking-mode-btn"),C=document.getElementById("share-btn"),KJ=null;function N(){if(KJ)clearTimeout(KJ);KJ=setTimeout(()=>ZJ(z),100)}var $J="sidebar-width",LQ=280,kQ=200,_Q=500;function hJ(){let J=localStorage.getItem($J);return J?parseInt(J,10):LQ}function uJ(J){let Q=Math.max(kQ,Math.min(_Q,J));document.documentElement.style.setProperty("--sidebar-width",`${Q}px`),localStorage.setItem($J,String(Q))}var d=!1,gJ=0,yJ=0;PQ.addEventListener("mousedown",(J)=>{J.preventDefault(),d=!0,gJ=J.clientX,yJ=hJ(),document.body.style.cursor="col-resize",document.body.style.userSelect="none"});document.addEventListener("mousemove",(J)=>{if(!d)return;let Q=J.clientX-gJ,Z=yJ+Q;uJ(Z)});document.addEventListener("mouseup",()=>{if(d)d=!1,document.body.style.cursor="",document.body.style.userSelect=""});uJ(hJ());function HQ(J){let Q=J===0?12:J>12?J-12:J,Z=J<12?"am":"pm";return`${Q}${Z}`}function cJ(J){let Q=o();return(J+Q)%24}function lJ(){vJ.innerHTML="";for(let J=0;J<24;J++){let Q=cJ(J),Z=document.createElement("div");Z.className="hour-label",Z.textContent=HQ(Q),vJ.appendChild(Z)}}function YJ(){TJ.innerHTML="";let J=YQ();for(let Q of J){let Z=document.createElement("span");Z.textContent=Q,TJ.appendChild(Z)}}function B(){if(!Array.isArray(z.grid)||z.grid.length!==168)console.error("Invalid state.grid detected, reinitializing:",z.grid),z.grid=Array(168).fill(j);l.innerHTML="";let J=WQ(z.grid),Q=new Map;for(let Z of J){let q=I(z,Z.categoryId);if(q)Q.set(Z.centerIndex,{name:q.name,colSpan:Z.colSpan})}for(let Z=0;Z<24;Z++){let q=cJ(Z);for(let K=0;K<7;K++){let M=IJ(K)*24+q,O=z.grid[M],Y=I(z,O),V=Y?.color??"#9ca3af",F=document.createElement("div");F.className="cell",F.dataset.index=String(M),F.style.backgroundColor=V;let G=Q.get(M);if(G){let U=document.createElement("span");if(U.className="cell-label",U.textContent=G.name,U.style.color=XJ(V)?"rgba(0,0,0,0.55)":"rgba(255,255,255,0.75)",G.colSpan>1)U.style.width=`${G.colSpan*100}%`;F.appendChild(U)}if(z.trackingMode){let U=document.createElement("div");U.className="cell-tracking-top",U.style.backgroundColor=V;let L=document.createElement("span");L.className="cell-tracking-label",L.textContent=Y?.name??"",L.style.color=XJ(V)?"rgba(0,0,0,0.7)":"rgba(255,255,255,0.9)",U.appendChild(L);let v=document.createElement("div");v.className="cell-tracking-bottom";let D=document.createElement("span");D.className="cell-tracking-checkbox",D.textContent="○";let R=document.createElement("span");R.className="cell-tracking-line",v.appendChild(D),v.appendChild(R),F.appendChild(U),F.appendChild(v)}l.appendChild(F)}}}function w(){if(h.innerHTML="",VJ.classList.contains("collapsed")){let q=I(z,z.activeCategoryId);if(q)_.style.backgroundColor=q.color,_.style.borderColor=q.color,_.style.color=XJ(q.color)?"rgba(0,0,0,0.7)":"rgba(255,255,255,0.9)";else _.style.backgroundColor="",_.style.borderColor="",_.style.color=""}else _.style.backgroundColor="",_.style.borderColor="",_.style.color="";let Q=b(z,j)>0,Z=[...z.categories].sort((q,K)=>{let X=q.id===j,M=K.id===j;if(Q){if(X&&!M)return-1;if(!X&&M)return 1}return q.name.localeCompare(K.name)});for(let q of Z){let K=b(z,q.id),X=Math.round(K/168*100),M=q.id===j;if(M&&(K===0||X===0))continue;let O=(K/7).toFixed(1).replace(/\.0$/,""),Y=z.activeCategoryId===q.id,V=K>0?`${K}h · ${O}/day`:`${K}h`,F=document.createElement("div");F.className=`category-item${Y?" active":""}`,F.dataset.id=q.id,F.innerHTML=`
+      <input type="color" class="category-color" value="${q.color}" data-id="${q.id}">
+      <button class="category-randomize" data-id="${q.id}" title="Randomize color">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/>
+          <path d="m18 2 4 4-4 4"/>
+          <path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/>
+          <path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/>
+          <path d="m18 14 4 4-4 4"/>
+        </svg>
+      </button>
+      <div class="category-info">
+        <div class="category-name" data-id="${q.id}">${AQ(q.name)} — ${X}%</div>
+        <div class="category-stats">${V}</div>
+      </div>
+      ${!M?`<button class="category-edit" data-id="${q.id}" title="Rename category">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+          <path d="m15 5 4 4"/>
+        </svg>
+      </button>`:""}
+      ${!M?`<button class="category-delete" data-id="${q.id}" title="Delete category">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>`:""}
+    `,h.appendChild(F)}}function H(){bJ.disabled=W.past.length===0,CJ.disabled=W.future.length===0,xJ.classList.toggle("active",z.eraserMode),pJ.classList.toggle("active",z.trackingMode),document.body.classList.toggle("tracking-mode",z.trackingMode)}function f(){YJ(),B(),w(),H()}function AQ(J){return J.replace(/[&<>"']/g,(Q)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[Q]??Q)}function fQ(){return`cat-${Date.now()}-${Math.random().toString(36).slice(2,7)}`}function EQ(J){let Q=J.slice(1).match(/.{2}/g);if(!Q||Q.length!==3)return"⬛";let Z=Q.map((V)=>parseInt(V,16)),q=Z[0]??0,K=Z[1]??0,X=Z[2]??0,M=[["\uD83D\uDFE6",[52,152,219]],["\uD83D\uDFE9",[46,204,113]],["\uD83D\uDFE8",[241,196,15]],["\uD83D\uDFE7",[230,126,34]],["\uD83D\uDFE5",[231,76,60]],["\uD83D\uDFEA",[155,89,182]],["⬛",[44,62,80]],["⬜",[236,240,241]],["\uD83D\uDFEB",[141,85,36]],["\uD83D\uDD35",[41,128,185]],["\uD83D\uDFE2",[39,174,96]],["\uD83D\uDFE1",[241,196,15]],["\uD83D\uDFE0",[230,126,34]],["\uD83D\uDD34",[192,57,43]],["\uD83D\uDFE3",[142,68,173]]],O=1/0,Y="⬛";for(let[V,[F,G,U]]of M){let L=Math.sqrt(Math.pow(q-F,2)+Math.pow(K-G,2)+Math.pow(X-U,2));if(L<O)O=L,Y=V}return Y}function vQ(J="hybrid"){let Q=[],q=b(z,j)>0,K=z.categories.filter((O)=>{let Y=b(z,O.id),V=Math.round(Y/168*100);if(O.id===j&&(Y===0||V===0))return!1;return Y>0||O.id===j}).sort((O,Y)=>{let V=O.id===j,F=Y.id===j;if(q){if(V&&!F)return-1;if(!V&&F)return 1}return O.name.localeCompare(Y.name)}),X=new Map;K.forEach((O)=>{X.set(O.id,EQ(O.color))});let M=40;for(let O of K){let Y=b(z,O.id),V=Math.round(Y/168*100),F=(Y/7).toFixed(1).replace(/\.0$/,""),G=X.get(O.id)||"⬛",U=Math.round(V/100*M),L=G.repeat(U);Q.push(`${L} ${O.name} ${V}% · ${Y}h · ${F}/day`)}return Q.join(`
+`)}async function TQ(){let J=vQ("hybrid");if(await WJ(J)){let Z=x.innerHTML;x.innerHTML=`
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    `,x.style.color="var(--accent)",setTimeout(()=>{x.innerHTML=Z,x.style.color=""},2000)}else alert(`Failed to copy. Please copy manually:
+
+`+J)}function wQ(){return new Promise((J,Q)=>{if(typeof window.html2canvas==="function"){J(window.html2canvas);return}if(document.querySelector("script[data-html2canvas]")){let K=setInterval(()=>{if(typeof window.html2canvas==="function")clearInterval(K),J(window.html2canvas)},100);setTimeout(()=>{clearInterval(K),Q(Error("Timeout waiting for html2canvas to load"))},1e4);return}let q=document.createElement("script");q.setAttribute("data-html2canvas","true"),q.src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",q.onload=()=>{if(typeof window.html2canvas==="function")J(window.html2canvas);else Q(Error("html2canvas loaded but not available"))},q.onerror=()=>{Q(Error("Failed to load html2canvas script from CDN"))},document.head.appendChild(q)})}async function BQ(){if(!wJ){console.error("Grid container not found");return}let J=P.innerHTML;try{P.disabled=!0,P.innerHTML=`
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+    `;let Z=await(await wQ())(wJ,{scale:2,backgroundColor:"#ffffff",useCORS:!0,logging:!1,allowTaint:!1});if(!Z)throw Error("html2canvas returned null");let q=await new Promise((O,Y)=>{Z.toBlob((V)=>{if(!V){Y(Error("Failed to create blob from canvas"));return}O(V)},"image/png")}),K=URL.createObjectURL(q),X=document.createElement("a"),M=new Date().toISOString().split("T")[0];X.download=`168hours-calendar-${M}.png`,X.href=K,document.body.appendChild(X),X.click(),document.body.removeChild(X),URL.revokeObjectURL(K),P.innerHTML=`
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    `,P.style.color="var(--accent)",setTimeout(()=>{P.innerHTML=J,P.style.color="",P.disabled=!1},2000)}catch(Q){console.error("Failed to export PNG:",Q);let Z=Q instanceof Error?Q.message:String(Q);alert(`Failed to export calendar as PNG: ${Z}
+
+Check the browser console for details.`),P.disabled=!1,P.innerHTML=J,P.style.color=""}}var FJ=!1,n=new Set;function dJ(J){let Q=parseInt(J.dataset.index,10);if(n.has(Q))return;n.add(Q);let Z=GJ(z,W,Q);z=Z.state,W=Z.history,B(),w(),H(),N()}l.addEventListener("mousedown",(J)=>{let Q=J.target.closest(".cell");if(!Q)return;J.preventDefault(),FJ=!0,n.clear(),dJ(Q)});l.addEventListener("mousemove",(J)=>{if(!FJ)return;let Q=J.target.closest(".cell");if(!Q)return;dJ(Q)});document.addEventListener("mouseup",()=>{FJ=!1,n.clear()});function DQ(J){if(J===j)return;let Q=I(z,J);if(!Q)return;let Z=h.querySelector(`.category-name[data-id="${J}"]`);if(!Z)return;let q=document.createElement("input");q.type="text",q.className="category-name-input",q.value=Q.name,q.maxLength=20,Z.replaceWith(q),q.focus(),q.select();let K=()=>{let X=q.value.trim()||Q.name,M=RJ(z,W,J,X);z=M.state,W=M.history,w(),H(),N()};q.addEventListener("blur",K),q.addEventListener("keydown",(X)=>{if(X.key==="Enter")X.preventDefault(),K();else if(X.key==="Escape")q.value=Q.name,K()})}function nJ(){let J=Math.random(),Q=0.65+Math.random()*0.2,Z=0.45+Math.random()*0.15,q=Q*Math.min(Z,1-Z),K=(X)=>{let M=(X+J*12)%12,O=Z-q*Math.max(Math.min(M-3,9-M,1),-1);return Math.round(255*O).toString(16).padStart(2,"0")};return`#${K(0)}${K(8)}${K(4)}`}h.addEventListener("click",(J)=>{let Q=J.target,Z=Q.closest(".category-randomize");if(Z){J.stopPropagation();let M=Z.dataset.id,O=QJ(z,W,M,nJ());z=O.state,W=O.history,B(),w(),H(),N();return}let q=Q.closest(".category-edit");if(q){J.stopPropagation(),DQ(q.dataset.id);return}let K=Q.closest(".category-delete");if(K){J.stopPropagation();let M=K.dataset.id,O=PJ(z,W,M);z=O.state,W=O.history,f(),A.textContent=E(),N();return}if(Q.classList.contains("category-color"))return;let X=Q.closest(".category-item");if(X){let M=X.dataset.id;z.activeCategoryId=M,z.eraserMode=!1,w(),H(),N()}});h.addEventListener("input",(J)=>{let Q=J.target;if(Q.classList.contains("category-color")){let Z=Q.dataset.id,q=Q.value,K=QJ(z,W,Z,q);z=K.state,W=K.history,B(),H(),N()}});bJ.addEventListener("click",()=>{let J=kJ(z,W);z=J.state,W=J.history,f(),A.textContent=E(),N()});CJ.addEventListener("click",()=>{let J=_J(z,W);z=J.state,W=J.history,f(),A.textContent=E(),N()});UQ.addEventListener("click",()=>{let J=HJ(z,W);z=J.state,W=J.history,f(),A.textContent=E(),N()});xJ.addEventListener("click",()=>{if(z.eraserMode=!z.eraserMode,z.eraserMode)z.activeCategoryId=j;w(),H(),N()});pJ.addEventListener("click",()=>{z.trackingMode=!z.trackingMode,B(),H(),N()});x.addEventListener("click",()=>{TQ()});P.addEventListener("click",()=>{BQ()});async function WJ(J){if(navigator.clipboard&&navigator.clipboard.writeText)try{return await navigator.clipboard.writeText(J),!0}catch(Z){console.warn("Clipboard API failed, trying fallback:",Z)}let Q=document.createElement("textarea");try{if(Q.value=J,Object.assign(Q.style,{position:"fixed",left:"0",top:"0",width:"2px",height:"2px",padding:"0",margin:"0",border:"none",outline:"none",opacity:"0",pointerEvents:"none",zIndex:"-9999",transform:"translateX(-100%)",overflow:"hidden",clip:"rect(0, 0, 0, 0)",clipPath:"inset(50%)"}),Q.setAttribute("readonly",""),Q.setAttribute("aria-hidden","true"),Q.setAttribute("tabindex","-1"),document.body.appendChild(Q),navigator.userAgent.match(/ipad|iphone/i)){let q=document.createRange();q.selectNodeContents(Q);let K=window.getSelection();K?.removeAllRanges(),K?.addRange(q),Q.setSelectionRange(0,J.length)}else Q.select(),Q.setSelectionRange(0,J.length);let Z=document.execCommand("copy");return window.getSelection()?.removeAllRanges(),Z}catch(Z){return console.warn("Fallback copy failed:",Z),!1}finally{if(Q.parentNode)document.body.removeChild(Q)}}async function IQ(){let J=fJ(z);if(await WJ(J)){let Z=k.innerHTML;k.innerHTML=`
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    `,k.style.color="var(--accent)",setTimeout(()=>{k.innerHTML=Z,k.style.color=""},2000)}else if(prompt("Copy this calendar data (select all and copy):",J)===J){let q=k.innerHTML;k.innerHTML=`
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      `,k.style.color="var(--accent)",setTimeout(()=>{k.innerHTML=q,k.style.color=""},2000)}}function bQ(){let J=prompt("Paste calendar data (Ctrl+V / Cmd+V):");if(!J)return;let Q=EJ(J.trim());if(!Q){alert("Invalid calendar data. Please check the format and try again.");return}let Z=[...W.past,{grid:[...z.grid],categories:z.categories.map((K)=>({...K}))}];if(Z.length>50)Z.shift();W={past:Z,future:[]},z=Q,f(),A.textContent=E(),ZJ(z);let q=S.innerHTML;S.innerHTML=`
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  `,S.style.color="var(--accent)",setTimeout(()=>{S.innerHTML=q,S.style.color=""},2000)}k.addEventListener("click",()=>{IQ()});S.addEventListener("click",()=>{bQ()});C.addEventListener("click",async()=>{if(await WJ("https://168hours-production.up.railway.app")){let Q=C.innerHTML;C.innerHTML=`
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      <span>Share</span>
+    `,C.style.color="#16a34a",setTimeout(()=>{C.innerHTML=Q,C.style.color=""},2000)}});var CQ=null;jQ.addEventListener("click",()=>{CQ=null,NQ.textContent="Add Category",SJ.textContent="Add",zJ.value="",mJ.value=nJ(),T.showModal(),zJ.focus()});GQ.addEventListener("click",()=>{let J=AJ(z,W);z=J.state,W=J.history,f(),A.textContent=E(),N()});function iJ(){let J=zJ.value.trim();if(!J)return;if(!z||!W)z=qJ()??u(),W=e();let Q=mJ.value,Z=fQ();if(J===Z){console.error("BUG: name equals id before calling addCategory!",{name:J,id:Z}),alert("Bug detected: category name equals ID. Please report this.");return}let q;try{q=NJ(z,W,Z,J,Q)}catch(X){console.error("addCategory threw an error:",X),alert(`Error adding category: ${X instanceof Error?X.message:String(X)}`);return}if(!q?.state){console.error("addCategory returned invalid result:",q),alert("Failed to add category. Please try again.");return}let K=q.state.categories[q.state.categories.length-1];if(!K||K.name!==J){console.error("BUG: Created category has wrong name!",{expected:J,actual:K?.name,category:K}),alert(`Bug detected: Category name is "${K?.name}" but should be "${J}"`);return}z=q.state,W=q.history,z.activeCategoryId=Z,z.eraserMode=!1,f(),A.textContent=E(),N(),T.close()}RQ.addEventListener("click",()=>{T.close()});SJ.addEventListener("click",(J)=>{J.preventDefault(),iJ()});T.addEventListener("submit",(J)=>{J.preventDefault(),iJ()});T.addEventListener("click",(J)=>{if(J.target===T)T.close()});MJ.value=String(i());MJ.addEventListener("change",()=>{let J=parseInt(MJ.value,10);XQ(J),YJ(),B()});OJ.value=String(o());OJ.addEventListener("change",()=>{let J=parseInt(OJ.value,10);OQ(J),lJ(),B()});var oJ="sidebar-collapsed";function xQ(){return localStorage.getItem(oJ)==="true"}function sJ(J){localStorage.setItem(oJ,String(J)),VJ.classList.toggle("collapsed",J)}sJ(xQ());_.addEventListener("click",()=>{let J=VJ.classList.contains("collapsed");sJ(!J),w()});function E(){let J=new Date,Q=J.getFullYear(),Z=new Date(Q,0,1),q=Math.floor((J.getTime()-Z.getTime())/86400000)+1,K=String(J.getHours()).padStart(2,"0"),X=String(J.getMinutes()).padStart(2,"0");return`v${Q}.${String(q).padStart(3,"0")}.${K}${X}`}lJ();YJ();f();A.textContent=E();
+
+  </script>
+</body>
+</html>
