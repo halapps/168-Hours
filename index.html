@@ -199,19 +199,28 @@ body {
 .btn-danger {
   color: var(--danger);
   border-color: var(--danger);
-  background: transparent;
+  background: var(--bg-card);
 }
 
 .btn-danger:hover:not(:disabled) {
   background: var(--danger);
   color: white;
+  border-color: var(--danger-hover);
 }
 
 .btn-add {
   width: 100%;
-  border-style: dashed;
+  border-color: var(--border);
   color: var(--text-secondary);
+  background: var(--bg-card);
 }
+
+.btn-add:hover:not(:disabled) {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+  background: var(--bg-secondary);
+}
+
 
 .btn-icon.active,
 .btn-labeled.active {
@@ -313,6 +322,32 @@ body {
   max-height: calc(100vh - 220px);
 }
 
+.legend-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.category-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn-secondary {
+  border-color: var(--border);
+  color: var(--text-secondary);
+  background: var(--bg-card);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+  background: var(--bg-secondary);
+}
+
 .category-item {
   display: flex;
   align-items: center;
@@ -332,6 +367,22 @@ body {
   box-shadow: inset 0 0 0 2px var(--text-primary);
 }
 
+.category-item.merge-selected {
+  background: rgba(59, 130, 246, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.45);
+}
+
+.category-item.category-group {
+  cursor: default;
+}
+
+.category-color-wrapper {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
 .category-color {
   width: 20px;
   height: 20px;
@@ -339,6 +390,11 @@ body {
   flex-shrink: 0;
   border: 1px solid rgba(0,0,0,0.1);
   cursor: pointer;
+}
+
+.category-color.category-color-group {
+  border: none;
+  border-radius: 8px;
 }
 
 .category-color::-webkit-color-swatch-wrapper {
@@ -353,6 +409,73 @@ body {
 .category-info {
   flex: 1;
   min-width: 0;
+}
+
+.category-members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.35rem;
+}
+
+.category-member {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.1rem 0.3rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: rgba(0, 0, 0, 0.04);
+  font-size: 0.6875rem;
+  color: var(--text-secondary);
+}
+
+.category-member-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.05rem 0.2rem;
+}
+
+.category-member-remove {
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.1rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.category-member-remove:hover {
+  color: var(--danger);
+  background: rgba(220, 38, 38, 0.12);
+}
+
+.category-member:hover,
+.category-member:focus-within {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text-primary);
+}
+
+.category-member-select.active {
+  border-color: rgba(37, 99, 235, 0.4);
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--text-primary);
+}
+
+.category-member-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
 }
 
 .category-name {
@@ -378,7 +501,33 @@ body {
   color: var(--text-muted);
 }
 
-.category-randomize,
+.category-randomize {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 1.5px solid var(--bg-card);
+  background: var(--bg-card);
+  border-radius: 999px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  z-index: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.category-randomize svg {
+  width: 10px;
+  height: 10px;
+}
+
 .category-edit,
 .category-delete {
   opacity: 0;
@@ -392,6 +541,55 @@ body {
   flex-shrink: 0;
 }
 
+.category-merge,
+.category-unmerge {
+  opacity: 0;
+  padding: 0.25rem;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.category-group-add {
+  opacity: 0;
+  padding: 0.25rem;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.category-item:hover .category-group-add {
+  opacity: 1;
+}
+
+.category-group-add:hover {
+  color: var(--accent);
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.category-item:hover .category-merge,
+.category-item:hover .category-unmerge {
+  opacity: 1;
+}
+
+.category-merge:hover {
+  color: var(--accent);
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.category-unmerge:hover {
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.12);
+}
+
 .category-item:hover .category-randomize,
 .category-item:hover .category-edit,
 .category-item:hover .category-delete {
@@ -400,7 +598,9 @@ body {
 
 .category-randomize:hover {
   color: #8b5cf6;
-  background: rgba(139, 92, 246, 0.1);
+  background: var(--bg-card);
+  border-color: #8b5cf6;
+  box-shadow: 0 1px 3px rgba(139, 92, 246, 0.3);
 }
 
 .category-edit:hover {
@@ -643,9 +843,26 @@ body {
     font-size: 0.625rem;
   }
   
+  .category-color-wrapper {
+    width: 16px;
+    height: 16px;
+  }
+
   .category-color {
     width: 16px;
     height: 16px;
+  }
+
+  .category-randomize {
+    width: 14px;
+    height: 14px;
+    top: -3px;
+    right: -3px;
+  }
+
+  .category-randomize svg {
+    width: 8px;
+    height: 8px;
   }
 }
 
@@ -838,6 +1055,8 @@ body {
   .category-randomize,
   .category-edit,
   .category-delete,
+  .category-color-wrapper,
+  .category-randomize,
   .category-color,
   .dialog {
     display: none !important;
@@ -980,7 +1199,6 @@ body {
   }
 }
 
-
   </style>
 </head>
 <body>
@@ -1073,8 +1291,14 @@ body {
         </button>
         <div class="sidebar-content">
           <div class="legend" id="legend"></div>
-          <button id="add-category-btn" class="btn btn-add">Add Category</button>
-          <button id="reset-categories-btn" class="btn btn-danger" style="margin-top: 0.5rem;">Reset Categories and Data</button>
+          <div class="legend-actions">
+            <button id="merge-categories-btn" class="btn btn-secondary" disabled>Merge selected</button>
+            <button id="clear-merge-selection-btn" class="btn btn-secondary" disabled>Clear selection</button>
+          </div>
+          <div class="category-actions">
+            <button id="add-category-btn" class="btn btn-add">Add Category</button>
+            <button id="reset-categories-btn" class="btn btn-danger">Reset Categories and Data</button>
+          </div>
           <div class="week-start-section">
             <div class="week-start-setting">
               <label class="week-start-label">Week starts on</label>
@@ -1153,68 +1377,118 @@ body {
     </form>
   </dialog>
   <script>
-var U="unassigned";function aJ(){let J=Math.random(),Q=0.65+Math.random()*0.2,Z=0.45+Math.random()*0.15,q=Q*Math.min(Z,1-Z),K=(X)=>{let z=(X+J*12)%12,Y=Z-q*Math.max(Math.min(z-3,9-z,1),-1);return Math.round(255*Y).toString(16).padStart(2,"0")};return`#${K(0)}${K(8)}${K(4)}`}var a=[{id:"sleep",name:"Sleep",color:"#6366f1"},{id:"work",name:"Work",color:"#10b981"},{id:"life-ops",name:"Life Ops",color:"#f59e0b"},{id:"health",name:"Health",color:"#ef4444"},{id:"family-partner",name:"Family / Partner",color:"#ec4899"},{id:"social",name:"Social",color:"#8b5cf6"},{id:"personal-growth",name:"Personal Growth",color:"#14b8a6"},{id:"projects",name:"Projects",color:"#f97316"},{id:"leisure",name:"Leisure",color:"#84cc16"},{id:"buffer",name:"Buffer",color:"#0ea5e9"},{id:"unassigned",name:"Unassigned",color:"#9ca3af"}];function u(){return{categories:[...a.map((J)=>({...J}))],grid:Array(168).fill("unassigned"),activeCategoryId:"unassigned",eraserMode:!1,trackingMode:!1}}function e(){return{past:[],future:[]}}function JJ(J,Q=!1){let q={grid:Array.isArray(J.grid)&&J.grid.length===168?[...J.grid]:Array(168).fill("unassigned")};if(Q&&Array.isArray(J.categories)&&J.categories.length>0)q.categories=J.categories.map((K)=>({...K}));return q}function b(J,Q){return J.categories.find((Z)=>Z.id===Q)}function I(J,Q){return J.grid.filter((Z)=>Z===Q).length}function UJ(J,Q){let Z=[...J.past,{grid:[...Q]}];if(Z.length>50)Z.shift();return{past:Z,future:[]}}function p(J,Q){if(!Q||typeof Q!=="object")return console.warn("pushHistoryWithCategories: invalid state, using empty history"),{past:Array.isArray(J?.past)?J.past:[],future:[]};try{let Z=JJ(Q,!0),K=[...Array.isArray(J?.past)?J.past:[],Z];if(K.length>50)K.shift();return{past:K,future:[]}}catch(Z){return console.error("pushHistoryWithCategories error:",Z),{past:Array.isArray(J?.past)?J.past:[],future:[]}}}function r(J,Q,Z,q){if(Z<0||Z>=168)return{state:J,history:Q};if(J.grid[Z]===q)return{state:J,history:Q};let K=UJ(Q,J.grid),X=[...J.grid];return X[Z]=q,{state:{...J,grid:X},history:K}}function GJ(J,Q,Z){if(Z<0||Z>=168)return{state:J,history:Q};if(J.eraserMode)return r(J,Q,Z,"unassigned");if(J.grid[Z]===J.activeCategoryId)return r(J,Q,Z,"unassigned");return r(J,Q,Z,J.activeCategoryId)}function NJ(J,Q,Z,q,K){if(!J||typeof J!=="object")J=u();let X=Array.isArray(J.grid)&&J.grid.length===168?[...J.grid]:Array(168).fill("unassigned"),z={categories:Array.isArray(J.categories)?J.categories:[],grid:X,activeCategoryId:J.activeCategoryId||"unassigned",eraserMode:J.eraserMode||!1,trackingMode:J.trackingMode||!1},Y={past:Array.isArray(Q?.past)?Q.past:[],future:Array.isArray(Q?.future)?Q.future:[]},V=p(Y,z),O=K;if(!O||typeof O!=="string")try{O=aJ()}catch(j){console.warn("randomColor() failed, using default:",j),O="#9ca3af"}if(typeof Z!=="string")throw console.error("addCategory: id must be a string, got:",typeof Z,Z),Error(`Invalid id parameter: expected string, got ${typeof Z}`);if(typeof q!=="string")throw console.error("addCategory: name must be a string, got:",typeof q,q),Error(`Invalid name parameter: expected string, got ${typeof q}`);if(q===Z)throw console.error("BUG DETECTED: name and id are the same!",{id:Z,name:q,color:O}),Error(`Category name "${q}" equals the id - this is a bug!`);let F={id:Z,name:q,color:O},G=Array.isArray(z.categories)?[...z.categories,F]:[F];if(F.name!==q||F.id!==Z)console.error("BUG: Category properties don't match inputs!",{inputId:Z,inputName:q,categoryId:F.id,categoryName:F.name});return{state:{categories:G,grid:X,activeCategoryId:z.activeCategoryId,eraserMode:z.eraserMode,trackingMode:z.trackingMode},history:V}}function PJ(J,Q,Z,q){let K=p(Q,J);return{state:{...J,categories:J.categories.map((X)=>X.id===Z?{...X,name:q}:X)},history:K}}function QJ(J,Q,Z,q){let K=p(Q,J);return{state:{...J,categories:J.categories.map((X)=>X.id===Z?{...X,color:q}:X)},history:K}}function RJ(J,Q,Z){if(Z==="unassigned")return{state:J,history:Q};if(!b(J,Z))return{state:J,history:Q};let q=p(Q,J),K=J.grid.map((Y)=>Y===Z?"unassigned":Y),X=J.categories.filter((Y)=>Y.id!==Z),z=J.activeCategoryId===Z?"unassigned":J.activeCategoryId;return{state:{...J,categories:X,grid:K,activeCategoryId:z},history:q}}function kJ(J){if(Array.isArray(J))return{grid:J};if(!J||!Array.isArray(J.grid))return{grid:Array(168).fill("unassigned")};return J}function LJ(J,Q){if(Q.past.length===0)return{state:J,history:Q};let Z=[...Q.past],q=kJ(Z.pop());return{state:{...J,grid:q.grid,...q.categories?{categories:q.categories.map((X)=>({...X}))}:{}},history:{past:Z,future:[JJ(J,!0),...Q.future]}}}function HJ(J,Q){if(Q.future.length===0)return{state:J,history:Q};let Z=[...Q.future],q=kJ(Z.shift());return{state:{...J,grid:q.grid,...q.categories?{categories:q.categories.map((X)=>({...X}))}:{}},history:{past:[...Q.past,JJ(J,!0)],future:Z}}}function ZJ(J){try{localStorage.setItem("168hours",JSON.stringify(J))}catch{console.warn("Failed to save state to localStorage")}}function qJ(){try{let J=localStorage.getItem("168hours");if(!J)return null;let Q=JSON.parse(J);if(!Array.isArray(Q.grid)||Q.grid.length!==168||!Array.isArray(Q.categories))return null;if(!Q.categories.find((Z)=>Z.id==="unassigned"))Q.categories.unshift({id:"unassigned",name:"Unassigned",color:"#9ca3af"});if(typeof Q.trackingMode!=="boolean")Q.trackingMode=!1;return Q}catch{return null}}function AJ(J,Q){let Z=UJ(Q,J.grid);return{state:{...J,grid:Array(168).fill("unassigned")},history:Z}}function _J(J,Q){let Z=new Set(a.map((Y)=>Y.id)),q=p(Q,J),K=Array(168).fill("unassigned"),X=[...a.map((Y)=>({...Y}))],z="unassigned";if(typeof J.activeCategoryId==="string"&&Z.has(J.activeCategoryId))z=J.activeCategoryId;return{state:{...J,categories:X,grid:K,activeCategoryId:z,eraserMode:!1,trackingMode:J.trackingMode??!1},history:q}}var tJ="2",t="168h:";function eJ(J){let Q=[];if(J.length===0)return Q;let Z=J[0],q=1;for(let K=1;K<J.length;K++)if(J[K]===Z)q++;else Q.push([q,Z]),Z=J[K],q=1;return Q.push([q,Z]),Q}function JQ(J){let Q=[];for(let[Z,q]of J)for(let K=0;K<Z;K++)Q.push(q);return Q}function QQ(J){return J.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}function ZQ(J){let Q=J.replace(/-/g,"+").replace(/_/g,"/");while(Q.length%4)Q+="=";return Q}function fJ(J){let Q=eJ(J.grid),Z={version:tJ,categories:J.categories,grid:Q},q=JSON.stringify(Z),K=btoa(q),X=QQ(K);return`${t}${X}`}function vJ(J){try{if(!J.startsWith(t))return null;let Q=J.slice(t.length),Z;try{let z=ZQ(Q);Z=atob(z)}catch{try{Z=atob(Q)}catch{return null}}let q=JSON.parse(Z),K;if(q.version==="2"&&Array.isArray(q.grid)&&q.grid.length>0&&Array.isArray(q.grid[0]))K=JQ(q.grid);else if(q.version==="1"&&Array.isArray(q.grid))K=q.grid;else return null;if(!q.version||!Array.isArray(q.categories)||K.length!==168)return null;if(!q.categories.find((z)=>z.id==="unassigned"))q.categories.unshift({id:"unassigned",name:"Unassigned",color:"#9ca3af"});let X=new Set(q.categories.map((z)=>z.id));for(let z=0;z<K.length;z++)if(!X.has(K[z]))K[z]="unassigned";return{categories:q.categories,grid:K,activeCategoryId:"unassigned",eraserMode:!1,trackingMode:!1}}catch{return null}}function qQ(J){let Q=J.slice(1).match(/.{2}/g);if(!Q||Q.length!==3)return 0;let Z=Q.map((q)=>{let K=parseInt(q,16)/255;return K<=0.03928?K/12.92:Math.pow((K+0.055)/1.055,2.4)});return 0.2126*Z[0]+0.7152*Z[1]+0.0722*Z[2]}function XJ(J){return qQ(J)>0.4}var DJ="first-day-of-week";function KQ(){try{let Q=new Intl.Locale(navigator.language);if("weekInfo"in Q){let Z=Q.weekInfo;if(Z&&typeof Z.firstDay==="number")return Z.firstDay}}catch{}let J=navigator.language.toLowerCase();if(J.startsWith("en-us")||J.startsWith("en-ca")||J.startsWith("en-au")||J.startsWith("ja"))return 7;return 1}function XQ(){let J=localStorage.getItem(DJ);if(J){let Q=parseInt(J,10);if(Q>=1&&Q<=7)return Q}return KQ()}function zQ(J){if(J>=1&&J<=7)localStorage.setItem(DJ,String(J)),y=J}var y=null;function i(){if(y===null)y=XQ();return y}var bJ="day-start-time",MQ=4;function YQ(){let J=localStorage.getItem(bJ);if(J){let Q=parseInt(J,10);if(Q>=0&&Q<=23)return Q}return MQ}function OQ(J){if(J>=0&&J<=23)localStorage.setItem(bJ,String(J)),c=J}var c=null;function o(){if(c===null)c=YQ();return c}function IJ(J){let Q=i();return((Q===7?6:Q-1)+J)%7}function VQ(J){let Q=i(),Z=Q===7?6:Q-1;return(J-Z+7)%7}function FQ(){let J=i(),Q=new Intl.DateTimeFormat(navigator.language,{weekday:"short"}),Z=[],q=new Date(2024,0,1),K=J===7?6:J-1;for(let X=0;X<7;X++){let z=(K+X)%7,Y=new Date(q);Y.setDate(q.getDate()+z),Z.push(Q.format(Y))}return Z}function g(J,Q){let Z=o(),q=(J+Z)%24;return IJ(Q)*24+q}function $(J){let Q=Math.floor(J/24),Z=J%24,q=o(),K=(Z-q+24)%24,X=VQ(Q);return{row:K,col:X}}function WQ(J){let{row:Q,col:Z}=$(J),q=[];if(Q>0)q.push(g(Q-1,Z));if(Q<23)q.push(g(Q+1,Z));if(Z>0)q.push(g(Q,Z-1));if(Z<6)q.push(g(Q,Z+1));return q}function jQ(J){let Q=new Set,Z=[];if(!J||J.length!==168)return[];for(let q=0;q<168;q++){if(Q.has(q))continue;let K=J[q];if(K===void 0)continue;if(K===U){Q.add(q);continue}let X=new Set,z=[q];while(z.length>0){let Y=z.pop();if(Q.has(Y))continue;if(J[Y]!==K)continue;Q.add(Y),X.add(Y);for(let V of WQ(Y))if(!Q.has(V)&&J[V]===K)z.push(V)}if(X.size>=2){let Y=0,V=0;for(let P of X){let{row:m,col:s}=$(P);Y+=m,V+=s}let O=Y/X.size,F=V/X.size,G=q,j=1/0;for(let P of X){let{row:m,col:s}=$(P),jJ=Math.pow(m-O,2)+Math.pow(s-F,2);if(jJ<j)j=jJ,G=P}let k=Math.round(O),T=[...X].filter((P)=>$(P).row===k),D=1;if(T.length>0){let P=T.map((m)=>$(m).col);D=Math.max(...P)-Math.min(...P)+1}Z.push({categoryId:K,cells:X,centerIndex:G,colSpan:D})}}return Z}var M=qJ()??u(),W=e(),l=document.getElementById("grid"),h=document.getElementById("legend"),EJ=document.getElementById("hour-labels"),TJ=document.getElementById("day-labels"),CJ=document.getElementById("undo-btn"),xJ=document.getElementById("redo-btn"),UQ=document.getElementById("erase-all-btn"),x=document.getElementById("copy-summary-btn"),R=document.getElementById("export-png-btn"),L=document.getElementById("export-calendar-btn"),S=document.getElementById("import-calendar-btn"),SJ=document.getElementById("eraser-btn"),GQ=document.getElementById("add-category-btn"),NQ=document.getElementById("reset-categories-btn"),w=document.getElementById("category-dialog"),PQ=document.getElementById("dialog-title"),mJ=document.getElementById("dialog-submit"),RQ=document.getElementById("dialog-cancel"),zJ=document.getElementById("category-name"),pJ=document.getElementById("category-color"),kQ=document.getElementById("resize-handle"),OJ=document.querySelector(".sidebar"),H=document.getElementById("sidebar-toggle"),wJ=document.querySelector(".grid-container"),MJ=document.getElementById("week-start-select"),YJ=document.getElementById("day-start-select"),_=document.getElementById("version"),$J=document.getElementById("tracking-mode-btn"),C=document.getElementById("share-btn"),KJ=null;function N(){if(KJ)clearTimeout(KJ);KJ=setTimeout(()=>ZJ(M),100)}var hJ="sidebar-width",LQ=280,HQ=200,AQ=500;function uJ(){let J=localStorage.getItem(hJ);return J?parseInt(J,10):LQ}function gJ(J){let Q=Math.max(HQ,Math.min(AQ,J));document.documentElement.style.setProperty("--sidebar-width",`${Q}px`),localStorage.setItem(hJ,String(Q))}var d=!1,yJ=0,cJ=0;kQ.addEventListener("mousedown",(J)=>{J.preventDefault(),d=!0,yJ=J.clientX,cJ=uJ(),document.body.style.cursor="col-resize",document.body.style.userSelect="none"});document.addEventListener("mousemove",(J)=>{if(!d)return;let Q=J.clientX-yJ,Z=cJ+Q;gJ(Z)});document.addEventListener("mouseup",()=>{if(d)d=!1,document.body.style.cursor="",document.body.style.userSelect=""});gJ(uJ());function _Q(J){let Q=J===0?12:J>12?J-12:J,Z=J<12?"am":"pm";return`${Q}${Z}`}function lJ(J){let Q=o();return(J+Q)%24}function dJ(){EJ.innerHTML="";for(let J=0;J<24;J++){let Q=lJ(J),Z=document.createElement("div");Z.className="hour-label",Z.textContent=_Q(Q),EJ.appendChild(Z)}}function VJ(){TJ.innerHTML="";let J=FQ();for(let Q of J){let Z=document.createElement("span");Z.textContent=Q,TJ.appendChild(Z)}}function f(){if(!Array.isArray(M.grid)||M.grid.length!==168)console.error("Invalid state.grid detected, reinitializing:",M.grid),M.grid=Array(168).fill(U);l.innerHTML="";let J=jQ(M.grid),Q=new Map;for(let Z of J){let q=b(M,Z.categoryId);if(q)Q.set(Z.centerIndex,{name:q.name,colSpan:Z.colSpan})}for(let Z=0;Z<24;Z++){let q=lJ(Z);for(let K=0;K<7;K++){let z=IJ(K)*24+q,Y=M.grid[z],V=b(M,Y),O=V?.color??"#9ca3af",F=document.createElement("div");F.className="cell",F.dataset.index=String(z),F.style.backgroundColor=O;let G=Q.get(z);if(G){let j=document.createElement("span");if(j.className="cell-label",j.textContent=G.name,j.style.color=XJ(O)?"rgba(0,0,0,0.55)":"rgba(255,255,255,0.75)",G.colSpan>1)j.style.width=`${G.colSpan*100}%`;F.appendChild(j)}if(M.trackingMode){let j=document.createElement("div");j.className="cell-tracking-top",j.style.backgroundColor=O;let k=document.createElement("span");k.className="cell-tracking-label",k.textContent=V?.name??"",k.style.color=XJ(O)?"rgba(0,0,0,0.7)":"rgba(255,255,255,0.9)",j.appendChild(k);let T=document.createElement("div");T.className="cell-tracking-bottom";let D=document.createElement("span");D.className="cell-tracking-checkbox",D.textContent="○";let P=document.createElement("span");P.className="cell-tracking-line",T.appendChild(D),T.appendChild(P),F.appendChild(j),F.appendChild(T)}l.appendChild(F)}}}function B(){if(h.innerHTML="",OJ.classList.contains("collapsed")){let q=b(M,M.activeCategoryId);if(q)H.style.backgroundColor=q.color,H.style.borderColor=q.color,H.style.color=XJ(q.color)?"rgba(0,0,0,0.7)":"rgba(255,255,255,0.9)";else H.style.backgroundColor="",H.style.borderColor="",H.style.color=""}else H.style.backgroundColor="",H.style.borderColor="",H.style.color="";let Q=I(M,U)>0,Z=[...M.categories].sort((q,K)=>{let X=q.id===U,z=K.id===U;if(Q){if(X&&!z)return-1;if(!X&&z)return 1}return q.name.localeCompare(K.name)});for(let q of Z){let K=I(M,q.id),X=Math.round(K/168*100),z=q.id===U;if(z&&(K===0||X===0))continue;let Y=(K/7).toFixed(1).replace(/\.0$/,""),V=M.activeCategoryId===q.id,O=K>0?`${K}h · ${Y}/day`:`${K}h`,F=document.createElement("div");F.className=`category-item${V?" active":""}`,F.dataset.id=q.id,F.innerHTML=`
-      <input type="color" class="category-color" value="${q.color}" data-id="${q.id}">
-      <button class="category-randomize" data-id="${q.id}" title="Randomize color">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/>
-          <path d="m18 2 4 4-4 4"/>
-          <path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/>
-          <path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/>
-          <path d="m18 14 4 4-4 4"/>
-        </svg>
-      </button>
-      <div class="category-info">
-        <div class="category-name" data-id="${q.id}">${fQ(q.name)} — ${X}%</div>
-        <div class="category-stats">${O}</div>
+var w="unassigned";function NQ(){let J=Math.random(),Q=0.65+Math.random()*0.2,q=0.45+Math.random()*0.15,Z=Q*Math.min(q,1-q),K=(X)=>{let U=(X+J*12)%12,z=q-Z*Math.max(Math.min(U-3,9-U,1),-1);return Math.round(255*z).toString(16).padStart(2,"0")};return`#${K(0)}${K(8)}${K(4)}`}var qJ=[{id:"sleep",name:"Sleep",color:"#6366f1"},{id:"work",name:"Work",color:"#10b981"},{id:"life-ops",name:"Life Ops",color:"#f59e0b"},{id:"health",name:"Health",color:"#ef4444"},{id:"family-partner",name:"Family / Partner",color:"#ec4899"},{id:"social",name:"Social",color:"#8b5cf6"},{id:"personal-growth",name:"Personal Growth",color:"#14b8a6"},{id:"projects",name:"Projects",color:"#f97316"},{id:"leisure",name:"Leisure",color:"#84cc16"},{id:"buffer",name:"Buffer",color:"#0ea5e9"},{id:"unassigned",name:"Unassigned",color:"#9ca3af"}];function n(){return{categories:[...qJ.map((J)=>({...J}))],groups:[],grid:Array(168).fill("unassigned"),activeCategoryId:"unassigned",eraserMode:!1,trackingMode:!1}}function XJ(){return{past:[],future:[]}}function UJ(J,Q=!1){let Z={grid:Array.isArray(J.grid)&&J.grid.length===168?[...J.grid]:Array(168).fill("unassigned")};if(Q&&Array.isArray(J.categories)&&J.categories.length>0)Z.categories=J.categories.map((K)=>({...K}));if(Q&&Array.isArray(J.groups))Z.groups=J.groups.map((K)=>({...K,memberIds:[...K.memberIds],originalColors:K.originalColors?{...K.originalColors}:{},originalNames:K.originalNames?{...K.originalNames}:{}}));return Z}function E(J,Q){return J.categories.find((q)=>q.id===Q)}function m(J,Q){return J.grid.filter((q)=>q===Q).length}function EJ(J,Q){let q=[...J.past,{grid:[...Q]}];if(q.length>50)q.shift();return{past:q,future:[]}}function v(J,Q){if(!Q||typeof Q!=="object")return console.warn("pushHistoryWithCategories: invalid state, using empty history"),{past:Array.isArray(J?.past)?J.past:[],future:[]};try{let q=UJ(Q,!0),K=[...Array.isArray(J?.past)?J.past:[],q];if(K.length>50)K.shift();return{past:K,future:[]}}catch(q){return console.error("pushHistoryWithCategories error:",q),{past:Array.isArray(J?.past)?J.past:[],future:[]}}}function ZJ(J,Q,q,Z){if(q<0||q>=168)return{state:J,history:Q};if(J.grid[q]===Z)return{state:J,history:Q};let K=EJ(Q,J.grid),X=[...J.grid];return X[q]=Z,{state:{...J,grid:X},history:K}}function TJ(J,Q,q){if(q<0||q>=168)return{state:J,history:Q};if(J.eraserMode)return ZJ(J,Q,q,"unassigned");if(J.grid[q]===J.activeCategoryId)return ZJ(J,Q,q,"unassigned");return ZJ(J,Q,q,J.activeCategoryId)}function DJ(J,Q,q,Z,K){if(!J||typeof J!=="object")J=n();let X=Array.isArray(J.grid)&&J.grid.length===168?[...J.grid]:Array(168).fill("unassigned"),U={categories:Array.isArray(J.categories)?J.categories:[],groups:Array.isArray(J.groups)?J.groups:[],grid:X,activeCategoryId:J.activeCategoryId||"unassigned",eraserMode:J.eraserMode||!1,trackingMode:J.trackingMode||!1},z={past:Array.isArray(Q?.past)?Q.past:[],future:Array.isArray(Q?.future)?Q.future:[]},O=v(z,U),V=K;if(!V||typeof V!=="string")try{V=NQ()}catch(F){console.warn("randomColor() failed, using default:",F),V="#9ca3af"}if(typeof q!=="string")throw console.error("addCategory: id must be a string, got:",typeof q,q),Error(`Invalid id parameter: expected string, got ${typeof q}`);if(typeof Z!=="string")throw console.error("addCategory: name must be a string, got:",typeof Z,Z),Error(`Invalid name parameter: expected string, got ${typeof Z}`);if(Z===q)throw console.error("BUG DETECTED: name and id are the same!",{id:q,name:Z,color:V}),Error(`Category name "${Z}" equals the id - this is a bug!`);let W={id:q,name:Z,color:V},j=Array.isArray(U.categories)?[...U.categories,W]:[W];if(W.name!==Z||W.id!==q)console.error("BUG: Category properties don't match inputs!",{inputId:q,inputName:Z,categoryId:W.id,categoryName:W.name});return{state:{categories:j,groups:U.groups,grid:X,activeCategoryId:U.activeCategoryId,eraserMode:U.eraserMode,trackingMode:U.trackingMode},history:O}}function vJ(J,Q,q,Z){let K=v(Q,J);return{state:{...J,categories:J.categories.map((X)=>X.id===q?{...X,name:Z}:X)},history:K}}function zJ(J,Q,q,Z){let K=v(Q,J);return{state:{...J,categories:J.categories.map((X)=>X.id===q?{...X,color:Z}:X)},history:K}}function BJ(J,Q,q){if(q==="unassigned")return{state:J,history:Q};if(!E(J,q))return{state:J,history:Q};let Z=v(Q,J),K=J.grid.map((j)=>j===q?"unassigned":j),X=J.categories.filter((j)=>j.id!==q),U=new Map,O=J.groups.map((j)=>({...j,memberIds:j.memberIds.filter((F)=>F!==q)})).map((j)=>({...j,originalColors:{...j.originalColors},primaryMemberId:j.primaryMemberId})).filter((j)=>{if(j.memberIds.length>=2){if(delete j.originalColors[q],j.primaryMemberId===q)j.primaryMemberId=j.memberIds[0];return!0}for(let F of j.memberIds){let A=j.originalColors[F];if(A)U.set(F,A)}return!1}),V=X.map((j)=>{let F=U.get(j.id);return F?{...j,color:F}:j}),W=J.activeCategoryId===q?"unassigned":J.activeCategoryId;return{state:{...J,categories:V,groups:O,grid:K,activeCategoryId:W},history:Z}}function SJ(J,Q,q,Z,K,X,U,z){if(!Array.isArray(K)||K.length<2)return{state:J,history:Q};let O=Array.from(new Set(K)),V=new Set(J.categories.map((R)=>R.id)),W=O.filter((R)=>V.has(R)&&R!=="unassigned");if(W.length<2)return{state:J,history:Q};let j=v(Q,J),F=J.groups.map((R)=>({...R,memberIds:R.memberIds.filter((H)=>!W.includes(H))})).filter((R)=>R.memberIds.length>=2),A={},k={},P=J.categories.map((R)=>{if(W.includes(R.id)){A[R.id]=R.color,k[R.id]=R.name;let H=X[R.id];if(H)return{...R,color:H}}return R}),_={id:q,name:Z,memberIds:W,originalColors:A,originalNames:k,color:U,primaryMemberId:z};return{state:{...J,categories:P,groups:[...F,_]},history:j}}function YJ(J,Q,q,Z,K){if(!J.groups.find((V)=>V.id===q))return{state:J,history:Q};let U=v(Q,J),z=J.categories.map((V)=>{let W=K[V.id];return W?{...V,color:W}:V}),O=J.groups.map((V)=>V.id===q?{...V,color:Z}:V);return{state:{...J,categories:z,groups:O},history:U}}function xJ(J,Q,q,Z){if(!J.groups.some((z)=>z.id===q))return{state:J,history:Q};let X=v(Q,J),U=J.groups.map((z)=>z.id===q?{...z,name:Z}:z);return{state:{...J,groups:U},history:X}}function wJ(J,Q,q,Z,K,X){let U=J.groups.find((k)=>k.id===q);if(!U)return{state:J,history:Q};let z=Z.filter((k)=>k!=="unassigned");if(z.length===0)return{state:J,history:Q};let O=v(Q,J),V=Array.from(new Set([...U.memberIds,...z])),W={...U.originalColors},j={...U.originalNames},F=J.categories.map((k)=>{if(z.includes(k.id)&&!W[k.id])W[k.id]=k.color,j[k.id]=k.name;let P=K[k.id];return P?{...k,color:P}:k}),A=J.groups.map((k)=>k.id===q?{...k,memberIds:V,originalColors:W,originalNames:j,primaryMemberId:X}:k);return{state:{...J,categories:F,groups:A},history:O}}function VJ(J,Q,q,Z,K,X){let U=J.groups.find((P)=>P.id===q);if(!U)return{state:J,history:Q};if(!U.memberIds.includes(Z))return{state:J,history:Q};let z=v(Q,J),O=U.memberIds.filter((P)=>P!==Z),V=U.originalColors[Z],W=U.originalNames[Z],j={...U.originalColors},F={...U.originalNames};if(delete j[Z],delete F[Z],O.length<2){let P=J.categories.map((_)=>{let R=j[_.id];if(R){let H=F[_.id];return{..._,color:R,name:H??_.name}}if(_.id===Z&&V)return{..._,color:V,name:W??_.name};return _});return{state:{...J,categories:P,groups:J.groups.filter((_)=>_.id!==q)},history:z}}let A=J.categories.map((P)=>{if(P.id===Z&&V)return{...P,color:V,name:W??P.name};let _=K[P.id];return _?{...P,color:_}:P}),k=J.groups.map((P)=>P.id===q?{...P,memberIds:O,originalColors:j,originalNames:F,primaryMemberId:X}:P);return{state:{...J,categories:A,groups:k},history:z}}function CJ(J,Q,q){let Z=J.groups.find((z)=>z.id===q);if(!Z)return{state:J,history:Q};let K=v(Q,J),X=J.groups.filter((z)=>z.id!==q),U=J.categories.map((z)=>{let O=Z.originalColors[z.id],V=Z.originalNames[z.id];return O?{...z,color:O,name:V??z.name}:z});return{state:{...J,categories:U,groups:X},history:K}}function $J(J){if(Array.isArray(J))return{grid:J};if(!J||!Array.isArray(J.grid))return{grid:Array(168).fill("unassigned")};return J}function IJ(J,Q){if(Q.past.length===0)return{state:J,history:Q};let q=[...Q.past],Z=$J(q.pop());return{state:{...J,grid:Z.grid,...Z.categories?{categories:Z.categories.map((X)=>({...X}))}:{},...Z.groups?{groups:Z.groups.map((X)=>({...X,memberIds:[...X.memberIds],originalColors:X.originalColors?{...X.originalColors}:{},originalNames:X.originalNames?{...X.originalNames}:{}}))}:{}},history:{past:q,future:[UJ(J,!0),...Q.future]}}}function bJ(J,Q){if(Q.future.length===0)return{state:J,history:Q};let q=[...Q.future],Z=$J(q.shift());return{state:{...J,grid:Z.grid,...Z.categories?{categories:Z.categories.map((X)=>({...X}))}:{},...Z.groups?{groups:Z.groups.map((X)=>({...X,memberIds:[...X.memberIds],originalColors:X.originalColors?{...X.originalColors}:{},originalNames:X.originalNames?{...X.originalNames}:{}}))}:{}},history:{past:[...Q.past,UJ(J,!0)],future:q}}}function OJ(J){try{localStorage.setItem("168hours",JSON.stringify(J))}catch{console.warn("Failed to save state to localStorage")}}function FJ(){try{let J=localStorage.getItem("168hours");if(!J)return null;let Q=JSON.parse(J);if(!Array.isArray(Q.grid)||Q.grid.length!==168||!Array.isArray(Q.categories))return null;if(!Q.categories.find((q)=>q.id==="unassigned"))Q.categories.unshift({id:"unassigned",name:"Unassigned",color:"#9ca3af"});if(typeof Q.trackingMode!=="boolean")Q.trackingMode=!1;return Q.groups=hJ(Q.groups,Q.categories),Q}catch{return null}}function hJ(J,Q){if(!Array.isArray(J))return[];let q=new Set(Q.map((Z)=>Z.id));return J.filter((Z)=>typeof Z==="object"&&Z!==null&&typeof Z.id==="string"&&typeof Z.name==="string"&&Array.isArray(Z.memberIds)).map((Z)=>{let K=Z.memberIds.filter((U)=>q.has(U)&&U!=="unassigned"),X=typeof Z.primaryMemberId==="string"&&q.has(Z.primaryMemberId)?Z.primaryMemberId:K[0]??"unassigned";return{id:Z.id,name:Z.name,memberIds:K,originalColors:Z.originalColors&&typeof Z.originalColors==="object"?Object.fromEntries(Object.entries(Z.originalColors).filter(([U,z])=>q.has(U)&&typeof z==="string")):{},color:typeof Z.color==="string"?Z.color:"#9ca3af",originalNames:Z.originalNames&&typeof Z.originalNames==="object"?Object.fromEntries(Object.entries(Z.originalNames).filter(([U,z])=>q.has(U)&&typeof z==="string")):{},primaryMemberId:K.includes(X)?X:K[0]??"unassigned"}}).filter((Z)=>Z.memberIds.length>=2)}function cJ(J,Q){let q=EJ(Q,J.grid);return{state:{...J,grid:Array(168).fill("unassigned")},history:q}}function pJ(J,Q){let q=new Set(qJ.map((z)=>z.id)),Z=v(Q,J),K=Array(168).fill("unassigned"),X=[...qJ.map((z)=>({...z}))],U="unassigned";if(typeof J.activeCategoryId==="string"&&q.has(J.activeCategoryId))U=J.activeCategoryId;return{state:{...J,categories:X,groups:[],grid:K,activeCategoryId:U,eraserMode:!1,trackingMode:J.trackingMode??!1},history:Z}}var PQ="6",KJ="168h:";function RQ(J){let Q=[];if(J.length===0)return Q;let q=J[0],Z=1;for(let K=1;K<J.length;K++)if(J[K]===q)Z++;else Q.push([Z,q]),q=J[K],Z=1;return Q.push([Z,q]),Q}function y(J){let Q=[];for(let[q,Z]of J)for(let K=0;K<q;K++)Q.push(Z);return Q}function LQ(J){return J.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}function GQ(J){let Q=J.replace(/-/g,"+").replace(/_/g,"/");while(Q.length%4)Q+="=";return Q}function uJ(J){let Q=RQ(J.grid),q={version:PQ,categories:J.categories,groups:J.groups,grid:Q},Z=JSON.stringify(q),K=btoa(Z),X=LQ(K);return`${KJ}${X}`}function yJ(J){try{if(!J.startsWith(KJ))return null;let Q=J.slice(KJ.length),q;try{let z=GQ(Q);q=atob(z)}catch{try{q=atob(Q)}catch{return null}}let Z=JSON.parse(q),K;if(Z.version==="6"&&Array.isArray(Z.grid)&&Z.grid.length>0&&Array.isArray(Z.grid[0]))K=y(Z.grid);else if(Z.version==="5"&&Array.isArray(Z.grid)&&Z.grid.length>0&&Array.isArray(Z.grid[0]))K=y(Z.grid);else if(Z.version==="4"&&Array.isArray(Z.grid)&&Z.grid.length>0&&Array.isArray(Z.grid[0]))K=y(Z.grid);else if(Z.version==="3"&&Array.isArray(Z.grid)&&Z.grid.length>0&&Array.isArray(Z.grid[0]))K=y(Z.grid);else if(Z.version==="2"&&Array.isArray(Z.grid)&&Z.grid.length>0&&Array.isArray(Z.grid[0]))K=y(Z.grid);else if(Z.version==="1"&&Array.isArray(Z.grid))K=Z.grid;else return null;if(!Z.version||!Array.isArray(Z.categories)||K.length!==168)return null;if(!Z.categories.find((z)=>z.id==="unassigned"))Z.categories.unshift({id:"unassigned",name:"Unassigned",color:"#9ca3af"});let X=new Set(Z.categories.map((z)=>z.id));for(let z=0;z<K.length;z++)if(!X.has(K[z]))K[z]="unassigned";let U=hJ(Z.groups,Z.categories);return{categories:Z.categories,groups:U,grid:K,activeCategoryId:"unassigned",eraserMode:!1,trackingMode:!1}}catch{return null}}function fQ(J){let Q=J.slice(1).match(/.{2}/g);if(!Q||Q.length!==3)return 0;let q=Q.map((Z)=>{let K=parseInt(Z,16)/255;return K<=0.03928?K/12.92:Math.pow((K+0.055)/1.055,2.4)});return 0.2126*q[0]+0.7152*q[1]+0.0722*q[2]}function kJ(J){return fQ(J)>0.4}function WJ(J,Q,q){return Math.min(q,Math.max(Q,J))}function HQ(J){let Q=J.slice(1).match(/.{2}/g);if(!Q||Q.length!==3)return[0,0,0];return[parseInt(Q[0],16),parseInt(Q[1],16),parseInt(Q[2],16)]}function MQ(J,Q,q){let Z=J/255,K=Q/255,X=q/255,U=Math.max(Z,K,X),z=Math.min(Z,K,X),O=U-z,V=0,W=0,j=(U+z)/2;if(O!==0){switch(W=j>0.5?O/(2-U-z):O/(U+z),U){case Z:V=(K-X)/O+(K<X?6:0);break;case K:V=(X-Z)/O+2;break;default:V=(Z-K)/O+4;break}V*=60}return[V,W*100,j*100]}function EQ(J,Q,q){let Z=Q/100,K=q/100,X=(1-Math.abs(2*K-1))*Z,U=J/60,z=X*(1-Math.abs(U%2-1)),O=0,V=0,W=0;if(U>=0&&U<1)O=X,V=z;else if(U>=1&&U<2)O=z,V=X;else if(U>=2&&U<3)V=X,W=z;else if(U>=3&&U<4)V=z,W=X;else if(U>=4&&U<5)O=z,W=X;else if(U>=5&&U<6)O=X,W=z;let j=K-X/2,F=(A)=>Math.round((A+j)*255).toString(16).padStart(2,"0");return`#${F(O)}${F(V)}${F(W)}`}var iJ="first-day-of-week";function TQ(){try{let Q=new Intl.Locale(navigator.language);if("weekInfo"in Q){let q=Q.weekInfo;if(q&&typeof q.firstDay==="number")return q.firstDay}}catch{}let J=navigator.language.toLowerCase();if(J.startsWith("en-us")||J.startsWith("en-ca")||J.startsWith("en-au")||J.startsWith("ja"))return 7;return 1}function DQ(){let J=localStorage.getItem(iJ);if(J){let Q=parseInt(J,10);if(Q>=1&&Q<=7)return Q}return TQ()}function vQ(J){if(J>=1&&J<=7)localStorage.setItem(iJ,String(J)),s=J}var s=null;function e(){if(s===null)s=DQ();return s}var sJ="day-start-time",BQ=4;function SQ(){let J=localStorage.getItem(sJ);if(J){let Q=parseInt(J,10);if(Q>=0&&Q<=23)return Q}return BQ}function xQ(J){if(J>=0&&J<=23)localStorage.setItem(sJ,String(J)),o=J}var o=null;function JJ(){if(o===null)o=SQ();return o}function oJ(J){let Q=e();return((Q===7?6:Q-1)+J)%7}function wQ(J){let Q=e(),q=Q===7?6:Q-1;return(J-q+7)%7}function CQ(){let J=e(),Q=new Intl.DateTimeFormat(navigator.language,{weekday:"short"}),q=[],Z=new Date(2024,0,1),K=J===7?6:J-1;for(let X=0;X<7;X++){let U=(K+X)%7,z=new Date(Z);z.setDate(Z.getDate()+U),q.push(Q.format(z))}return q}function d(J,Q){let q=JJ(),Z=(J+q)%24;return oJ(Q)*24+Z}function l(J){let Q=Math.floor(J/24),q=J%24,Z=JJ(),K=(q-Z+24)%24,X=wQ(Q);return{row:K,col:X}}function $Q(J){let{row:Q,col:q}=l(J),Z=[];if(Q>0)Z.push(d(Q-1,q));if(Q<23)Z.push(d(Q+1,q));if(q>0)Z.push(d(Q,q-1));if(q<6)Z.push(d(Q,q+1));return Z}function IQ(J){let Q=new Set,q=[];if(!J||J.length!==168)return[];for(let Z=0;Z<168;Z++){if(Q.has(Z))continue;let K=J[Z];if(K===void 0)continue;if(K===w){Q.add(Z);continue}let X=new Set,U=[Z];while(U.length>0){let z=U.pop();if(Q.has(z))continue;if(J[z]!==K)continue;Q.add(z),X.add(z);for(let O of $Q(z))if(!Q.has(O)&&J[O]===K)U.push(O)}if(X.size>=2){let z=0,O=0;for(let _ of X){let{row:R,col:H}=l(_);z+=R,O+=H}let V=z/X.size,W=O/X.size,j=Z,F=1/0;for(let _ of X){let{row:R,col:H}=l(_),T=Math.pow(R-V,2)+Math.pow(H-W,2);if(T<F)F=T,j=_}let A=Math.round(V),k=[...X].filter((_)=>l(_).row===A),P=1;if(k.length>0){let _=k.map((R)=>l(R).col);P=Math.max(..._)-Math.min(..._)+1}q.push({categoryId:K,cells:X,centerIndex:j,colSpan:P})}}return q}var Y=FJ()??n(),N=XJ(),x=new Set,a=document.getElementById("grid"),b=document.getElementById("legend"),mJ=document.getElementById("hour-labels"),lJ=document.getElementById("day-labels"),aJ=document.getElementById("undo-btn"),tJ=document.getElementById("redo-btn"),bQ=document.getElementById("erase-all-btn"),p=document.getElementById("copy-summary-btn"),D=document.getElementById("export-png-btn"),B=document.getElementById("export-calendar-btn"),u=document.getElementById("import-calendar-btn"),rJ=document.getElementById("eraser-btn"),hQ=document.getElementById("add-category-btn"),cQ=document.getElementById("reset-categories-btn"),eJ=document.getElementById("merge-categories-btn"),JQ=document.getElementById("clear-merge-selection-btn"),h=document.getElementById("category-dialog"),pQ=document.getElementById("dialog-title"),QQ=document.getElementById("dialog-submit"),uQ=document.getElementById("dialog-cancel"),AJ=document.getElementById("category-name"),ZQ=document.getElementById("category-color"),yQ=document.getElementById("resize-handle"),RJ=document.querySelector(".sidebar"),S=document.getElementById("sidebar-toggle"),gJ=document.querySelector(".grid-container"),_J=document.getElementById("week-start-select"),NJ=document.getElementById("day-start-select"),C=document.getElementById("version"),qQ=document.getElementById("tracking-mode-btn"),c=document.getElementById("share-btn"),jJ=null;function L(){if(jJ)clearTimeout(jJ);jJ=setTimeout(()=>OJ(Y),100)}var KQ="sidebar-width",mQ=280,lQ=200,gQ=500;function XQ(){let J=localStorage.getItem(KQ);return J?parseInt(J,10):mQ}function UQ(J){let Q=Math.max(lQ,Math.min(gQ,J));document.documentElement.style.setProperty("--sidebar-width",`${Q}px`),localStorage.setItem(KQ,String(Q))}var t=!1,zQ=0,YQ=0;yQ.addEventListener("mousedown",(J)=>{J.preventDefault(),t=!0,zQ=J.clientX,YQ=XQ(),document.body.style.cursor="col-resize",document.body.style.userSelect="none"});document.addEventListener("mousemove",(J)=>{if(!t)return;let Q=J.clientX-zQ,q=YQ+Q;UQ(q)});document.addEventListener("mouseup",()=>{if(t)t=!1,document.body.style.cursor="",document.body.style.userSelect=""});UQ(XQ());function nQ(J){let Q=J===0?12:J>12?J-12:J,q=J<12?"am":"pm";return`${Q}${q}`}function VQ(J){let Q=JJ();return(J+Q)%24}function OQ(){mJ.innerHTML="";for(let J=0;J<24;J++){let Q=VQ(J),q=document.createElement("div");q.className="hour-label",q.textContent=nQ(Q),mJ.appendChild(q)}}function LJ(){lJ.innerHTML="";let J=CQ();for(let Q of J){let q=document.createElement("span");q.textContent=Q,lJ.appendChild(q)}}function M(){if(!Array.isArray(Y.grid)||Y.grid.length!==168)console.error("Invalid state.grid detected, reinitializing:",Y.grid),Y.grid=Array(168).fill(w);a.innerHTML="";let J=IQ(Y.grid),Q=new Map;for(let q of J){let Z=E(Y,q.categoryId);if(Z)Q.set(q.centerIndex,{name:Z.name,colSpan:q.colSpan})}for(let q=0;q<24;q++){let Z=VQ(q);for(let K=0;K<7;K++){let U=oJ(K)*24+Z,z=Y.grid[U],O=E(Y,z),V=O?.color??"#9ca3af",W=document.createElement("div");W.className="cell",W.dataset.index=String(U),W.style.backgroundColor=V;let j=Q.get(U);if(j){let F=document.createElement("span");if(F.className="cell-label",F.textContent=j.name,F.style.color=kJ(V)?"rgba(0,0,0,0.55)":"rgba(255,255,255,0.75)",j.colSpan>1)F.style.width=`${j.colSpan*100}%`;W.appendChild(F)}if(Y.trackingMode){let F=document.createElement("div");F.className="cell-tracking-top",F.style.backgroundColor=V;let A=document.createElement("span");A.className="cell-tracking-label",A.textContent=O?.name??"",A.style.color=kJ(V)?"rgba(0,0,0,0.7)":"rgba(255,255,255,0.9)",F.appendChild(A);let k=document.createElement("div");k.className="cell-tracking-bottom";let P=document.createElement("span");P.className="cell-tracking-checkbox",P.textContent="○";let _=document.createElement("span");_.className="cell-tracking-line",k.appendChild(P),k.appendChild(_),W.appendChild(F),W.appendChild(k)}a.appendChild(W)}}}function QJ(J){if(J.length===0)return null;return J.map((Q)=>({member:Q,count:m(Y,Q.id)})).sort((Q,q)=>q.count-Q.count)[0]?.member??null}function dQ(J){return J.map((Q)=>Q.color)}function FQ(){let J=new Set,Q=Array.isArray(Y.groups)?Y.groups:[],q=[];for(let O of Q){let V=O.memberIds.map((_)=>E(Y,_)).filter((_)=>Boolean(_));if(V.length<2)continue;V.forEach((_)=>J.add(_.id));let W=V.reduce((_,R)=>_+m(Y,R.id),0),j=Math.round(W/168*100),F=(W/7).toFixed(1).replace(/\.0$/,""),A=V.find((_)=>_.id===O.primaryMemberId)??QJ(V),k=O.color||A?.color||V[0].color,P=dQ(V);q.push({type:"group",group:O,members:V,totalCount:W,percent:j,avgPerDay:F,palette:P,primaryColor:k})}let K=m(Y,w)>0,X=Y.categories.filter((O)=>!J.has(O.id)).map((O)=>{let V=m(Y,O.id),W=Math.round(V/168*100),j=O.id===w,F=(V/7).toFixed(1).replace(/\.0$/,"");return{type:"category",category:O,count:V,percent:W,avgPerDay:F,isUnassigned:j}}).filter((O)=>{if(O.type!=="category")return!1;if(O.isUnassigned&&(O.count===0||O.percent===0))return!1;return!0}),z=[...q,...X].sort((O,V)=>{let W=O.type==="group"?O.percent:O.percent,j=V.type==="group"?V.percent:V.percent;if(W!==j)return j-W;let F=O.type==="group"?O.group.name:O.category.name,A=V.type==="group"?V.group.name:V.category.name;return F.localeCompare(A)});if(K)return z;return z}function iQ(J){return Y.groups.some((Q)=>Q.memberIds.includes(J))}function GJ(){return Array.from(x).filter((J)=>J!==w&&E(Y,J)&&!iQ(J))}function WQ(){let J=GJ();x=new Set(J),eJ.disabled=J.length<2,JQ.disabled=J.length===0}function sQ(J){let Q=J.map((K)=>E(Y,K)).filter((K)=>Boolean(K));if(Q.sort((K,X)=>K.name.localeCompare(X.name)),Q.length===0)return"Merged Group";if(Q.length===2)return`${Q[0].name} + ${Q[1].name}`;return`${QJ(Q)?.name??Q[0].name} + ${Q.length-1} more`}function g(J,Q,q){let Z=J.map((W)=>E(Y,W)).filter((W)=>Boolean(W));if(Z.length===0)return{};let[K,X,U]=MQ(...HQ(Q)),z=14,O={};return[...Z].sort((W,j)=>{if(W.id===q)return-1;if(j.id===q)return 1;return W.name.localeCompare(j.name)}).forEach((W,j)=>{if(W.id===q){O[W.id]=Q;return}let F=Math.ceil(j/2),A=j%2===0?1:-1,k=WJ(F*6,4,z)*A,P=A*4,_=(K+k+360)%360,R=WJ(X+2,40,85),H=WJ(U+P,30,78);O[W.id]=EQ(_,R,H)}),O}function G(){if(b.innerHTML="",RJ.classList.contains("collapsed")){let J=E(Y,Y.activeCategoryId);if(J)S.style.backgroundColor=J.color,S.style.borderColor=J.color,S.style.color=kJ(J.color)?"rgba(0,0,0,0.7)":"rgba(255,255,255,0.9)";else S.style.backgroundColor="",S.style.borderColor="",S.style.color=""}else S.style.backgroundColor="",S.style.borderColor="",S.style.color="";for(let J of FQ()){if(J.type==="group"){let X=J.totalCount>0?`${J.totalCount}h · ${J.avgPerDay}/day`:`${J.totalCount}h`,U=document.createElement("div");U.className="category-item category-group",U.dataset.groupId=J.group.id;let z=J.members.map((O,V)=>{let W=J.palette[V]??O.color;return`
+            <div class="category-member">
+              <button class="category-member-select${O.id===Y.activeCategoryId?" active":""}" data-id="${O.id}" title="Select ${i(O.name)}">
+                <span class="category-member-dot" style="background:${W}"></span>
+                ${i(O.name)}
+              </button>
+              <button class="category-member-remove" data-id="${O.id}" data-group-id="${J.group.id}" title="Remove from group">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+          `}).join("");U.innerHTML=`
+        <div class="category-color-wrapper">
+          <input type="color" class="category-color category-group-color" value="${J.group.color}" data-group-id="${J.group.id}">
+          <button class="category-randomize" data-group-id="${J.group.id}" title="Randomize color">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/>
+              <path d="m18 2 4 4-4 4"/>
+              <path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/>
+              <path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/>
+              <path d="m18 14 4 4-4 4"/>
+            </svg>
+          </button>
+        </div>
+        <div class="category-info">
+          <div class="category-name category-group-name" data-group-id="${J.group.id}">${i(J.group.name)} — ${J.percent}%</div>
+          <div class="category-stats">${X}</div>
+          <div class="category-members">${z}</div>
+        </div>
+        <button class="category-group-add" data-group-id="${J.group.id}" title="Add selected categories">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </button>
+        <button class="category-unmerge" data-group-id="${J.group.id}" title="Unmerge categories">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 7h7l-2-2M3 7l2 2"/>
+            <path d="M21 17h-7l2 2M21 17l-2-2"/>
+            <path d="M7 11v2a4 4 0 0 0 4 4h2"/>
+            <path d="M17 13v-2a4 4 0 0 0-4-4h-2"/>
+          </svg>
+        </button>
+      `,b.appendChild(U);continue}let Q=Y.activeCategoryId===J.category.id,q=x.has(J.category.id),Z=J.count>0?`${J.count}h · ${J.avgPerDay}/day`:`${J.count}h`,K=document.createElement("div");K.className=`category-item${Q?" active":""}${q?" merge-selected":""}`,K.dataset.id=J.category.id,K.innerHTML=`
+      <div class="category-color-wrapper">
+        <input type="color" class="category-color" value="${J.category.color}" data-id="${J.category.id}">
+        <button class="category-randomize" data-id="${J.category.id}" title="Randomize color">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/>
+            <path d="m18 2 4 4-4 4"/>
+            <path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/>
+            <path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/>
+            <path d="m18 14 4 4-4 4"/>
+          </svg>
+        </button>
       </div>
-      ${!z?`<button class="category-edit" data-id="${q.id}" title="Rename category">
+      <div class="category-info">
+        <div class="category-name" data-id="${J.category.id}">${i(J.category.name)} — ${J.percent}%</div>
+        <div class="category-stats">${Z}</div>
+      </div>
+      ${!J.isUnassigned?`<button class="category-merge" data-id="${J.category.id}" title="${q?"Remove from merge selection":"Select for merging"}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 7h10M7 12h10M7 17h10"/>
+        </svg>
+      </button>`:""}
+      ${!J.isUnassigned?`<button class="category-edit" data-id="${J.category.id}" title="Rename category">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
           <path d="m15 5 4 4"/>
         </svg>
       </button>`:""}
-      ${!z?`<button class="category-delete" data-id="${q.id}" title="Delete category">
+      ${!J.isUnassigned?`<button class="category-delete" data-id="${J.category.id}" title="Delete category">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 6L6 18M6 6l12 12"/>
         </svg>
       </button>`:""}
-    `,h.appendChild(F)}}function A(){CJ.disabled=W.past.length===0,xJ.disabled=W.future.length===0,SJ.classList.toggle("active",M.eraserMode),$J.classList.toggle("active",M.trackingMode),document.body.classList.toggle("tracking-mode",M.trackingMode)}function v(){VJ(),f(),B(),A()}function fQ(J){return J.replace(/[&<>"']/g,(Q)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[Q]??Q)}function vQ(){return`cat-${Date.now()}-${Math.random().toString(36).slice(2,7)}`}function EQ(J){let Q=J.slice(1).match(/.{2}/g);if(!Q||Q.length!==3)return"⬛";let Z=Q.map((O)=>parseInt(O,16)),q=Z[0]??0,K=Z[1]??0,X=Z[2]??0,z=[["\uD83D\uDFE6",[52,152,219]],["\uD83D\uDFE9",[46,204,113]],["\uD83D\uDFE8",[241,196,15]],["\uD83D\uDFE7",[230,126,34]],["\uD83D\uDFE5",[231,76,60]],["\uD83D\uDFEA",[155,89,182]],["⬛",[44,62,80]],["⬜",[236,240,241]],["\uD83D\uDFEB",[141,85,36]],["\uD83D\uDD35",[41,128,185]],["\uD83D\uDFE2",[39,174,96]],["\uD83D\uDFE1",[241,196,15]],["\uD83D\uDFE0",[230,126,34]],["\uD83D\uDD34",[192,57,43]],["\uD83D\uDFE3",[142,68,173]]],Y=1/0,V="⬛";for(let[O,[F,G,j]]of z){let k=Math.sqrt(Math.pow(q-F,2)+Math.pow(K-G,2)+Math.pow(X-j,2));if(k<Y)Y=k,V=O}return V}function TQ(J="hybrid"){let Q=[],q=I(M,U)>0,K=M.categories.filter((Y)=>{let V=I(M,Y.id),O=Math.round(V/168*100);if(Y.id===U&&(V===0||O===0))return!1;return V>0||Y.id===U}).sort((Y,V)=>{let O=Y.id===U,F=V.id===U;if(q){if(O&&!F)return-1;if(!O&&F)return 1}return Y.name.localeCompare(V.name)}),X=new Map;K.forEach((Y)=>{X.set(Y.id,EQ(Y.color))});let z=40;for(let Y of K){let V=I(M,Y.id),O=Math.round(V/168*100),F=(V/7).toFixed(1).replace(/\.0$/,""),G=X.get(Y.id)||"⬛",j=Math.round(O/100*z),k=G.repeat(j);Q.push(`${k} ${Y.name} ${O}% · ${V}h · ${F}/day`)}return Q.join(`
-`)}async function wQ(){let J=TQ("hybrid");if(await WJ(J)){let Z=x.innerHTML;x.innerHTML=`
+    `,b.appendChild(K)}WQ()}function f(){aJ.disabled=N.past.length===0,tJ.disabled=N.future.length===0,rJ.classList.toggle("active",Y.eraserMode),qQ.classList.toggle("active",Y.trackingMode),document.body.classList.toggle("tracking-mode",Y.trackingMode)}function $(){LJ(),M(),G(),f()}function i(J){return J.replace(/[&<>"']/g,(Q)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[Q]??Q)}function oQ(){return`cat-${Date.now()}-${Math.random().toString(36).slice(2,7)}`}function aQ(){return`group-${Date.now()}-${Math.random().toString(36).slice(2,7)}`}function nJ(J){let Q=J.slice(1).match(/.{2}/g);if(!Q||Q.length!==3)return"⬛";let q=Q.map((V)=>parseInt(V,16)),Z=q[0]??0,K=q[1]??0,X=q[2]??0,U=[["\uD83D\uDFE6",[52,152,219]],["\uD83D\uDFE9",[46,204,113]],["\uD83D\uDFE8",[241,196,15]],["\uD83D\uDFE7",[230,126,34]],["\uD83D\uDFE5",[231,76,60]],["\uD83D\uDFEA",[155,89,182]],["⬛",[44,62,80]],["⬜",[236,240,241]],["\uD83D\uDFEB",[141,85,36]],["\uD83D\uDD35",[41,128,185]],["\uD83D\uDFE2",[39,174,96]],["\uD83D\uDFE1",[241,196,15]],["\uD83D\uDFE0",[230,126,34]],["\uD83D\uDD34",[192,57,43]],["\uD83D\uDFE3",[142,68,173]]],z=1/0,O="⬛";for(let[V,[W,j,F]]of U){let A=Math.sqrt(Math.pow(Z-W,2)+Math.pow(K-j,2)+Math.pow(X-F,2));if(A<z)z=A,O=V}return O}function tQ(J="hybrid"){let Q=[],q=FQ(),Z=new Map;q.forEach((X)=>{if(X.type==="group")Z.set(X.group.id,nJ(X.primaryColor));else Z.set(X.category.id,nJ(X.category.color))});let K=40;for(let X of q){let U=X.type==="group"?X.totalCount:X.count,z=X.type==="group"?X.percent:X.percent,O=X.type==="group"?X.avgPerDay:X.avgPerDay,V=X.type==="group"?Z.get(X.group.id)||"⬛":Z.get(X.category.id)||"⬛",W=X.type==="group"?X.group.name:X.category.name,j=Math.round(z/100*K),F=V.repeat(j);Q.push(`${F} ${W} ${z}% · ${U}h · ${O}/day`)}return Q.join(`
+`)}async function rQ(){let J=tQ("hybrid");if(await HJ(J)){let q=p.innerHTML;p.innerHTML=`
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="20 6 9 17 4 12"/>
       </svg>
-    `,x.style.color="var(--accent)",setTimeout(()=>{x.innerHTML=Z,x.style.color=""},2000)}else alert(`Failed to copy. Please copy manually:
+    `,p.style.color="var(--accent)",setTimeout(()=>{p.innerHTML=q,p.style.color=""},2000)}else alert(`Failed to copy. Please copy manually:
 
-`+J)}function BQ(){return new Promise((J,Q)=>{if(typeof window.html2canvas==="function"){J(window.html2canvas);return}if(document.querySelector("script[data-html2canvas]")){let K=setInterval(()=>{if(typeof window.html2canvas==="function")clearInterval(K),J(window.html2canvas)},100);setTimeout(()=>{clearInterval(K),Q(Error("Timeout waiting for html2canvas to load"))},1e4);return}let q=document.createElement("script");q.setAttribute("data-html2canvas","true"),q.src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",q.onload=()=>{if(typeof window.html2canvas==="function")J(window.html2canvas);else Q(Error("html2canvas loaded but not available"))},q.onerror=()=>{Q(Error("Failed to load html2canvas script from CDN"))},document.head.appendChild(q)})}async function DQ(){if(!wJ){console.error("Grid container not found");return}let J=R.innerHTML;try{R.disabled=!0,R.innerHTML=`
+`+J)}function eQ(){return new Promise((J,Q)=>{if(typeof window.html2canvas==="function"){J(window.html2canvas);return}if(document.querySelector("script[data-html2canvas]")){let K=setInterval(()=>{if(typeof window.html2canvas==="function")clearInterval(K),J(window.html2canvas)},100);setTimeout(()=>{clearInterval(K),Q(Error("Timeout waiting for html2canvas to load"))},1e4);return}let Z=document.createElement("script");Z.setAttribute("data-html2canvas","true"),Z.src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",Z.onload=()=>{if(typeof window.html2canvas==="function")J(window.html2canvas);else Q(Error("html2canvas loaded but not available"))},Z.onerror=()=>{Q(Error("Failed to load html2canvas script from CDN"))},document.head.appendChild(Z)})}async function J0(){if(!gJ){console.error("Grid container not found");return}let J=D.innerHTML;try{D.disabled=!0,D.innerHTML=`
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"/>
         <polyline points="12 6 12 12 16 14"/>
       </svg>
-    `;let Z=await(await BQ())(wJ,{scale:2,backgroundColor:"#ffffff",useCORS:!0,logging:!1,allowTaint:!1});if(!Z)throw Error("html2canvas returned null");let q=await new Promise((Y,V)=>{Z.toBlob((O)=>{if(!O){V(Error("Failed to create blob from canvas"));return}Y(O)},"image/png")}),K=URL.createObjectURL(q),X=document.createElement("a"),z=new Date().toISOString().split("T")[0];X.download=`168hours-calendar-${z}.png`,X.href=K,document.body.appendChild(X),X.click(),document.body.removeChild(X),URL.revokeObjectURL(K),R.innerHTML=`
+    `;let q=await(await eQ())(gJ,{scale:2,backgroundColor:"#ffffff",useCORS:!0,logging:!1,allowTaint:!1});if(!q)throw Error("html2canvas returned null");let Z=await new Promise((z,O)=>{q.toBlob((V)=>{if(!V){O(Error("Failed to create blob from canvas"));return}z(V)},"image/png")}),K=URL.createObjectURL(Z),X=document.createElement("a"),U=new Date().toISOString().split("T")[0];X.download=`168hours-calendar-${U}.png`,X.href=K,document.body.appendChild(X),X.click(),document.body.removeChild(X),URL.revokeObjectURL(K),D.innerHTML=`
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="20 6 9 17 4 12"/>
       </svg>
-    `,R.style.color="var(--accent)",setTimeout(()=>{R.innerHTML=J,R.style.color="",R.disabled=!1},2000)}catch(Q){console.error("Failed to export PNG:",Q);let Z=Q instanceof Error?Q.message:String(Q);alert(`Failed to export calendar as PNG: ${Z}
+    `,D.style.color="var(--accent)",setTimeout(()=>{D.innerHTML=J,D.style.color="",D.disabled=!1},2000)}catch(Q){console.error("Failed to export PNG:",Q);let q=Q instanceof Error?Q.message:String(Q);alert(`Failed to export calendar as PNG: ${q}
 
-Check the browser console for details.`),R.disabled=!1,R.innerHTML=J,R.style.color=""}}var FJ=!1,n=new Set;function nJ(J){let Q=parseInt(J.dataset.index,10);if(n.has(Q))return;n.add(Q);let Z=GJ(M,W,Q);M=Z.state,W=Z.history,f(),B(),A(),N()}l.addEventListener("mousedown",(J)=>{let Q=J.target.closest(".cell");if(!Q)return;J.preventDefault(),FJ=!0,n.clear(),nJ(Q)});l.addEventListener("mousemove",(J)=>{if(!FJ)return;let Q=J.target.closest(".cell");if(!Q)return;nJ(Q)});document.addEventListener("mouseup",()=>{FJ=!1,n.clear()});function bQ(J){if(J===U)return;let Q=b(M,J);if(!Q)return;let Z=h.querySelector(`.category-name[data-id="${J}"]`);if(!Z)return;let q=document.createElement("input");q.type="text",q.className="category-name-input",q.value=Q.name,q.maxLength=20,Z.replaceWith(q),q.focus(),q.select();let K=()=>{let X=q.value.trim()||Q.name,z=PJ(M,W,J,X);M=z.state,W=z.history,f(),B(),A(),N()};q.addEventListener("blur",K),q.addEventListener("keydown",(X)=>{if(X.key==="Enter")X.preventDefault(),K();else if(X.key==="Escape")q.value=Q.name,K()})}function iJ(){let J=Math.random(),Q=0.65+Math.random()*0.2,Z=0.45+Math.random()*0.15,q=Q*Math.min(Z,1-Z),K=(X)=>{let z=(X+J*12)%12,Y=Z-q*Math.max(Math.min(z-3,9-z,1),-1);return Math.round(255*Y).toString(16).padStart(2,"0")};return`#${K(0)}${K(8)}${K(4)}`}h.addEventListener("click",(J)=>{let Q=J.target,Z=Q.closest(".category-randomize");if(Z){J.stopPropagation();let z=Z.dataset.id,Y=QJ(M,W,z,iJ());M=Y.state,W=Y.history,f(),B(),A(),N();return}let q=Q.closest(".category-edit");if(q){J.stopPropagation(),bQ(q.dataset.id);return}let K=Q.closest(".category-delete");if(K){J.stopPropagation();let z=K.dataset.id,Y=RJ(M,W,z);M=Y.state,W=Y.history,v(),_.textContent=E(),N();return}if(Q.classList.contains("category-color"))return;let X=Q.closest(".category-item");if(X){let z=X.dataset.id;M.activeCategoryId=z,M.eraserMode=!1,B(),A(),N()}});h.addEventListener("input",(J)=>{let Q=J.target;if(Q.classList.contains("category-color")){let Z=Q.dataset.id,q=Q.value,K=QJ(M,W,Z,q);M=K.state,W=K.history,f(),A(),N()}});CJ.addEventListener("click",()=>{let J=LJ(M,W);M=J.state,W=J.history,v(),_.textContent=E(),N()});xJ.addEventListener("click",()=>{let J=HJ(M,W);M=J.state,W=J.history,v(),_.textContent=E(),N()});UQ.addEventListener("click",()=>{let J=AJ(M,W);M=J.state,W=J.history,v(),_.textContent=E(),N()});SJ.addEventListener("click",()=>{if(M.eraserMode=!M.eraserMode,M.eraserMode)M.activeCategoryId=U;B(),A(),N()});$J.addEventListener("click",()=>{M.trackingMode=!M.trackingMode,f(),A(),N()});x.addEventListener("click",()=>{wQ()});R.addEventListener("click",()=>{DQ()});async function WJ(J){if(navigator.clipboard&&navigator.clipboard.writeText)try{return await navigator.clipboard.writeText(J),!0}catch(Z){console.warn("Clipboard API failed, trying fallback:",Z)}let Q=document.createElement("textarea");try{if(Q.value=J,Object.assign(Q.style,{position:"fixed",left:"0",top:"0",width:"2px",height:"2px",padding:"0",margin:"0",border:"none",outline:"none",opacity:"0",pointerEvents:"none",zIndex:"-9999",transform:"translateX(-100%)",overflow:"hidden",clip:"rect(0, 0, 0, 0)",clipPath:"inset(50%)"}),Q.setAttribute("readonly",""),Q.setAttribute("aria-hidden","true"),Q.setAttribute("tabindex","-1"),document.body.appendChild(Q),navigator.userAgent.match(/ipad|iphone/i)){let q=document.createRange();q.selectNodeContents(Q);let K=window.getSelection();K?.removeAllRanges(),K?.addRange(q),Q.setSelectionRange(0,J.length)}else Q.select(),Q.setSelectionRange(0,J.length);let Z=document.execCommand("copy");return window.getSelection()?.removeAllRanges(),Z}catch(Z){return console.warn("Fallback copy failed:",Z),!1}finally{if(Q.parentNode)document.body.removeChild(Q)}}async function IQ(){let J=fJ(M);if(await WJ(J)){let Z=L.innerHTML;L.innerHTML=`
+Check the browser console for details.`),D.disabled=!1,D.innerHTML=J,D.style.color=""}}var fJ=!1,r=new Set;function jQ(J){let Q=parseInt(J.dataset.index,10);if(r.has(Q))return;r.add(Q);let q=TJ(Y,N,Q);Y=q.state,N=q.history,M(),G(),f(),L()}a.addEventListener("mousedown",(J)=>{let Q=J.target.closest(".cell");if(!Q)return;J.preventDefault(),fJ=!0,r.clear(),jQ(Q)});a.addEventListener("mousemove",(J)=>{if(!fJ)return;let Q=J.target.closest(".cell");if(!Q)return;jQ(Q)});document.addEventListener("mouseup",()=>{fJ=!1,r.clear()});function Q0(J){if(J===w)return;let Q=E(Y,J);if(!Q)return;let q=b.querySelector(`.category-name[data-id="${J}"]`);if(!q)return;let Z=document.createElement("input");Z.type="text",Z.className="category-name-input",Z.value=Q.name,Z.maxLength=20,q.replaceWith(Z),Z.focus(),Z.select();let K=()=>{let X=Z.value.trim()||Q.name,U=vJ(Y,N,J,X);Y=U.state,N=U.history,M(),G(),f(),L()};Z.addEventListener("blur",K),Z.addEventListener("keydown",(X)=>{if(X.key==="Enter")X.preventDefault(),K();else if(X.key==="Escape")Z.value=Q.name,K()})}function Z0(J){let Q=Y.groups.find((X)=>X.id===J);if(!Q)return;let q=b.querySelector(`.category-group-name[data-group-id="${J}"]`);if(!q)return;let Z=document.createElement("input");Z.type="text",Z.className="category-name-input",Z.value=Q.name,Z.maxLength=24,q.replaceWith(Z),Z.focus(),Z.select();let K=()=>{let X=Z.value.trim()||Q.name,U=xJ(Y,N,J,X);Y=U.state,N=U.history,G(),f(),L()};Z.addEventListener("blur",K),Z.addEventListener("keydown",(X)=>{if(X.key==="Enter")X.preventDefault(),K();else if(X.key==="Escape")Z.value=Q.name,K()})}function PJ(){let J=Math.random(),Q=0.65+Math.random()*0.2,q=0.45+Math.random()*0.15,Z=Q*Math.min(q,1-q),K=(X)=>{let U=(X+J*12)%12,z=q-Z*Math.max(Math.min(U-3,9-U,1),-1);return Math.round(255*z).toString(16).padStart(2,"0")};return`#${K(0)}${K(8)}${K(4)}`}b.addEventListener("click",(J)=>{let Q=J.target,q=Q.closest(".category-group-add");if(q){J.stopPropagation();let F=q.dataset.groupId,A=Y.groups.find((R)=>R.id===F);if(!A)return;let k=GJ();if(k.length===0)return;let P=g([...A.memberIds,...k],A.color,A.primaryMemberId),_=wJ(Y,N,F,k,P,A.primaryMemberId);Y=_.state,N=_.history,MJ(),M(),G(),f(),L();return}let Z=Q.closest(".category-group-name");if(Z){J.stopPropagation();let F=Z.dataset.groupId;Z0(F);return}let K=Q.closest(".category-member-remove");if(K){J.stopPropagation();let F=K.dataset.groupId,A=K.dataset.id,k=Y.groups.find((T)=>T.id===F);if(!k)return;let P=k.memberIds.filter((T)=>T!==A);if(P.length<2){let T=VJ(Y,N,F,A,{},k.primaryMemberId);Y=T.state,N=T.history,M(),G(),f(),L();return}let _=A===k.primaryMemberId?QJ(P.map((T)=>E(Y,T)).filter((T)=>Boolean(T)))?.id??P[0]:k.primaryMemberId,R=g(P,k.color,_),H=VJ(Y,N,F,A,R,_);Y=H.state,N=H.history,M(),G(),f(),L();return}let X=Q.closest(".category-unmerge");if(X){J.stopPropagation();let F=X.dataset.groupId,A=CJ(Y,N,F);Y=A.state,N=A.history,M(),G(),f(),L();return}let U=Q.closest(".category-member-select");if(U){J.stopPropagation();let F=U.dataset.id;Y.activeCategoryId=F,Y.eraserMode=!1,G(),f(),L();return}let z=Q.closest(".category-randomize");if(z){J.stopPropagation();let F=z.dataset.groupId;if(F){let A=Y.groups.find((k)=>k.id===F);if(A){let k=PJ(),P=g(A.memberIds,k,A.primaryMemberId),_=YJ(Y,N,F,k,P);Y=_.state,N=_.history,M(),G(),f(),L()}}else{let A=z.dataset.id,k=zJ(Y,N,A,PJ());Y=k.state,N=k.history,M(),G(),f(),L()}return}let O=Q.closest(".category-merge");if(O){J.stopPropagation();let F=O.dataset.id;if(x.has(F))x.delete(F);else x.add(F);G();return}let V=Q.closest(".category-edit");if(V){J.stopPropagation(),Q0(V.dataset.id);return}let W=Q.closest(".category-delete");if(W){J.stopPropagation();let F=W.dataset.id,A=BJ(Y,N,F);Y=A.state,N=A.history,$(),C.textContent=I(),L();return}if(Q.classList.contains("category-color")||Q.classList.contains("category-group-color"))return;let j=Q.closest(".category-item");if(j){if(j.classList.contains("category-group"))return;let F=j.dataset.id;Y.activeCategoryId=F,Y.eraserMode=!1,G(),f(),L()}});b.addEventListener("input",(J)=>{let Q=J.target;if(Q.classList.contains("category-group-color")){let q=Q.dataset.groupId,Z=Q.value,K=Y.groups.find((z)=>z.id===q);if(!K)return;let X=g(K.memberIds,Z,K.primaryMemberId),U=YJ(Y,N,q,Z,X);Y=U.state,N=U.history,M(),G(),f(),L();return}if(Q.classList.contains("category-color")){let q=Q.dataset.id,Z=Q.value,K=zJ(Y,N,q,Z);Y=K.state,N=K.history,M(),G(),f(),L()}});aJ.addEventListener("click",()=>{let J=IJ(Y,N);Y=J.state,N=J.history,$(),C.textContent=I(),L()});tJ.addEventListener("click",()=>{let J=bJ(Y,N);Y=J.state,N=J.history,$(),C.textContent=I(),L()});bQ.addEventListener("click",()=>{let J=cJ(Y,N);Y=J.state,N=J.history,$(),C.textContent=I(),L()});rJ.addEventListener("click",()=>{if(Y.eraserMode=!Y.eraserMode,Y.eraserMode)Y.activeCategoryId=w;G(),f(),L()});qQ.addEventListener("click",()=>{Y.trackingMode=!Y.trackingMode,M(),f(),L()});p.addEventListener("click",()=>{rQ()});D.addEventListener("click",()=>{J0()});async function HJ(J){if(navigator.clipboard&&navigator.clipboard.writeText)try{return await navigator.clipboard.writeText(J),!0}catch(q){console.warn("Clipboard API failed, trying fallback:",q)}let Q=document.createElement("textarea");try{if(Q.value=J,Object.assign(Q.style,{position:"fixed",left:"0",top:"0",width:"2px",height:"2px",padding:"0",margin:"0",border:"none",outline:"none",opacity:"0",pointerEvents:"none",zIndex:"-9999",transform:"translateX(-100%)",overflow:"hidden",clip:"rect(0, 0, 0, 0)",clipPath:"inset(50%)"}),Q.setAttribute("readonly",""),Q.setAttribute("aria-hidden","true"),Q.setAttribute("tabindex","-1"),document.body.appendChild(Q),navigator.userAgent.match(/ipad|iphone/i)){let Z=document.createRange();Z.selectNodeContents(Q);let K=window.getSelection();K?.removeAllRanges(),K?.addRange(Z),Q.setSelectionRange(0,J.length)}else Q.select(),Q.setSelectionRange(0,J.length);let q=document.execCommand("copy");return window.getSelection()?.removeAllRanges(),q}catch(q){return console.warn("Fallback copy failed:",q),!1}finally{if(Q.parentNode)document.body.removeChild(Q)}}async function q0(){let J=uJ(Y);if(await HJ(J)){let q=B.innerHTML;B.innerHTML=`
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="20 6 9 17 4 12"/>
       </svg>
-    `,L.style.color="var(--accent)",setTimeout(()=>{L.innerHTML=Z,L.style.color=""},2000)}else if(prompt("Copy this calendar data (select all and copy):",J)===J){let q=L.innerHTML;L.innerHTML=`
+    `,B.style.color="var(--accent)",setTimeout(()=>{B.innerHTML=q,B.style.color=""},2000)}else if(prompt("Copy this calendar data (select all and copy):",J)===J){let Z=B.innerHTML;B.innerHTML=`
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="20 6 9 17 4 12"/>
         </svg>
-      `,L.style.color="var(--accent)",setTimeout(()=>{L.innerHTML=q,L.style.color=""},2000)}}function CQ(){let J=prompt("Paste calendar data (Ctrl+V / Cmd+V):");if(!J)return;let Q=vJ(J.trim());if(!Q){alert("Invalid calendar data. Please check the format and try again.");return}let Z=[...W.past,{grid:[...M.grid],categories:M.categories.map((K)=>({...K}))}];if(Z.length>50)Z.shift();W={past:Z,future:[]},M=Q,v(),_.textContent=E(),ZJ(M);let q=S.innerHTML;S.innerHTML=`
+      `,B.style.color="var(--accent)",setTimeout(()=>{B.innerHTML=Z,B.style.color=""},2000)}}function K0(){let J=prompt("Paste calendar data (Ctrl+V / Cmd+V):");if(!J)return;let Q=yJ(J.trim());if(!Q){alert("Invalid calendar data. Please check the format and try again.");return}let q=[...N.past,{grid:[...Y.grid],categories:Y.categories.map((K)=>({...K})),groups:Y.groups.map((K)=>({...K,memberIds:[...K.memberIds]}))}];if(q.length>50)q.shift();N={past:q,future:[]},Y=Q,x.clear(),$(),C.textContent=I(),OJ(Y);let Z=u.innerHTML;u.innerHTML=`
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <polyline points="20 6 9 17 4 12"/>
     </svg>
-  `,S.style.color="var(--accent)",setTimeout(()=>{S.innerHTML=q,S.style.color=""},2000)}L.addEventListener("click",()=>{IQ()});S.addEventListener("click",()=>{CQ()});C.addEventListener("click",async()=>{if(await WJ("https://168hours-production.up.railway.app")){let Q=C.innerHTML;C.innerHTML=`
+  `,u.style.color="var(--accent)",setTimeout(()=>{u.innerHTML=Z,u.style.color=""},2000)}B.addEventListener("click",()=>{q0()});u.addEventListener("click",()=>{K0()});c.addEventListener("click",async()=>{if(await HJ("https://168hours-production.up.railway.app")){let Q=c.innerHTML;c.innerHTML=`
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="20 6 9 17 4 12"/>
       </svg>
       <span>Share</span>
-    `,C.style.color="#16a34a",setTimeout(()=>{C.innerHTML=Q,C.style.color=""},2000)}});var xQ=null;GQ.addEventListener("click",()=>{xQ=null,PQ.textContent="Add Category",mJ.textContent="Add",zJ.value="",pJ.value=iJ(),w.showModal(),zJ.focus()});NQ.addEventListener("click",()=>{let J=_J(M,W);M=J.state,W=J.history,v(),_.textContent=E(),N()});function oJ(){let J=zJ.value.trim();if(!J)return;if(!M||!W)M=qJ()??u(),W=e();let Q=pJ.value,Z=vQ();if(J===Z){console.error("BUG: name equals id before calling addCategory!",{name:J,id:Z}),alert("Bug detected: category name equals ID. Please report this.");return}let q;try{q=NJ(M,W,Z,J,Q)}catch(X){console.error("addCategory threw an error:",X),alert(`Error adding category: ${X instanceof Error?X.message:String(X)}`);return}if(!q?.state){console.error("addCategory returned invalid result:",q),alert("Failed to add category. Please try again.");return}let K=q.state.categories[q.state.categories.length-1];if(!K||K.name!==J){console.error("BUG: Created category has wrong name!",{expected:J,actual:K?.name,category:K}),alert(`Bug detected: Category name is "${K?.name}" but should be "${J}"`);return}M=q.state,W=q.history,M.activeCategoryId=Z,M.eraserMode=!1,v(),_.textContent=E(),N(),w.close()}RQ.addEventListener("click",()=>{w.close()});mJ.addEventListener("click",(J)=>{J.preventDefault(),oJ()});w.addEventListener("submit",(J)=>{J.preventDefault(),oJ()});w.addEventListener("click",(J)=>{if(J.target===w)w.close()});MJ.value=String(i());MJ.addEventListener("change",()=>{let J=parseInt(MJ.value,10);zQ(J),VJ(),f()});YJ.value=String(o());YJ.addEventListener("change",()=>{let J=parseInt(YJ.value,10);OQ(J),dJ(),f()});var sJ="sidebar-collapsed";function SQ(){return localStorage.getItem(sJ)==="true"}function rJ(J){localStorage.setItem(sJ,String(J)),OJ.classList.toggle("collapsed",J)}rJ(SQ());H.addEventListener("click",()=>{let J=OJ.classList.contains("collapsed");rJ(!J),B()});var mQ="v2025.364.2100",BJ="dev-build-version";function pQ(){let J=localStorage.getItem(BJ);if(J)return J;let Q=new Date,Z=Q.getFullYear(),q=new Date(Z,0,1),K=Math.floor((Q.getTime()-q.getTime())/86400000)+1,X=String(Q.getHours()).padStart(2,"0"),z=String(Q.getMinutes()).padStart(2,"0"),Y=`v${Z}.${String(K).padStart(3,"0")}.${X}${z}-dev`;return localStorage.setItem(BJ,Y),Y}function E(){return mQ||pQ()}dJ();VJ();v();_.textContent=E();
+    `,c.style.color="#16a34a",setTimeout(()=>{c.innerHTML=Q,c.style.color=""},2000)}});function MJ(){x.clear(),WQ(),G()}eJ.addEventListener("click",()=>{let J=GJ();if(J.length<2)return;let Q=[...J].sort((V,W)=>{let j=E(Y,V)?.name??"",F=E(Y,W)?.name??"";return j.localeCompare(F)}),q=aQ(),Z=sQ(Q),K=QJ(Q.map((V)=>E(Y,V)).filter((V)=>Boolean(V))),X=K?.id??Q[0],U=K?.color??Y.categories.find((V)=>V.id===X)?.color??"#9ca3af",z=g(Q,U,X),O=SJ(Y,N,q,Z,Q,z,U,X);Y=O.state,N=O.history,MJ(),M(),f(),L()});JQ.addEventListener("click",()=>{MJ()});var X0=null;hQ.addEventListener("click",()=>{X0=null,pQ.textContent="Add Category",QQ.textContent="Add",AJ.value="",ZQ.value=PJ(),h.showModal(),AJ.focus()});cQ.addEventListener("click",()=>{let J=pJ(Y,N);Y=J.state,N=J.history,x.clear(),$(),C.textContent=I(),L()});function kQ(){let J=AJ.value.trim();if(!J)return;if(!Y||!N)Y=FJ()??n(),N=XJ();let Q=ZQ.value,q=oQ();if(J===q){console.error("BUG: name equals id before calling addCategory!",{name:J,id:q}),alert("Bug detected: category name equals ID. Please report this.");return}let Z;try{Z=DJ(Y,N,q,J,Q)}catch(X){console.error("addCategory threw an error:",X),alert(`Error adding category: ${X instanceof Error?X.message:String(X)}`);return}if(!Z?.state){console.error("addCategory returned invalid result:",Z),alert("Failed to add category. Please try again.");return}let K=Z.state.categories[Z.state.categories.length-1];if(!K||K.name!==J){console.error("BUG: Created category has wrong name!",{expected:J,actual:K?.name,category:K}),alert(`Bug detected: Category name is "${K?.name}" but should be "${J}"`);return}Y=Z.state,N=Z.history,Y.activeCategoryId=q,Y.eraserMode=!1,$(),C.textContent=I(),L(),h.close()}uQ.addEventListener("click",()=>{h.close()});QQ.addEventListener("click",(J)=>{J.preventDefault(),kQ()});h.addEventListener("submit",(J)=>{J.preventDefault(),kQ()});h.addEventListener("click",(J)=>{if(J.target===h)h.close()});_J.value=String(e());_J.addEventListener("change",()=>{let J=parseInt(_J.value,10);vQ(J),LJ(),M()});NJ.value=String(JJ());NJ.addEventListener("change",()=>{let J=parseInt(NJ.value,10);xQ(J),OQ(),M()});var AQ="sidebar-collapsed";function U0(){return localStorage.getItem(AQ)==="true"}function _Q(J){localStorage.setItem(AQ,String(J)),RJ.classList.toggle("collapsed",J)}_Q(U0());S.addEventListener("click",()=>{let J=RJ.classList.contains("collapsed");_Q(!J),G()});var z0="v2025.365.0252",dJ="dev-build-version";function Y0(){let J=localStorage.getItem(dJ);if(J)return J;let Q=new Date,q=Q.getFullYear(),Z=new Date(q,0,1),K=Math.floor((Q.getTime()-Z.getTime())/86400000)+1,X=String(Q.getHours()).padStart(2,"0"),U=String(Q.getMinutes()).padStart(2,"0"),z=`v${q}.${String(K).padStart(3,"0")}.${X}${U}-dev`;return localStorage.setItem(dJ,z),z}function I(){return z0||Y0()}OQ();LJ();$();C.textContent=I();
 
   </script>
 </body>
