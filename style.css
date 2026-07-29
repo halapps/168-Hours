@@ -310,6 +310,8 @@ body {
 .sidebar-content {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  height: 100%;
   min-height: 0;
   gap: 1rem;
   overflow-y: auto;
@@ -711,6 +713,230 @@ body {
   border-radius: var(--radius-md);
 }
 
+.year-progress-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.05), rgba(255, 255, 255, 0.98));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.year-progress-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.year-progress-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.year-progress-title {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.year-progress-label {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+
+.year-progress-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.year-progress-stat {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.year-progress-stat-passed {
+  color: var(--text-primary);
+}
+
+.year-progress-grid {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.year-progress-cell {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background: rgba(148, 163, 184, 0.22);
+}
+
+.year-progress-cell.is-passed {
+  background: linear-gradient(180deg, #2563eb, #1d4ed8);
+}
+
+.life-progress-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.06), rgba(255, 255, 255, 0.98));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.life-progress-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.life-progress-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.life-progress-title {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.life-progress-expectancy {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.life-progress-lockdown {
+  font-size: 0.68rem;
+  color: #b45309;
+  line-height: 1.35;
+}
+
+.life-progress-age {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.life-progress-visual {
+  --life-progress: 0%;
+  --life-progress-lockdown-start: 0%;
+  display: grid;
+  place-items: center;
+  width: 5.8rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background:
+    radial-gradient(circle at center, var(--bg-card) 0 58%, transparent 59%),
+    conic-gradient(
+      from 0deg,
+      #059669 0 var(--life-progress-lockdown-start),
+      #f59e0b var(--life-progress-lockdown-start) var(--life-progress),
+      rgba(148, 163, 184, 0.22) var(--life-progress) 100%
+    );
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+}
+
+.life-progress-visual-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.08rem;
+}
+
+.life-progress-percent {
+  font-family: var(--font-mono);
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.life-progress-visual-label {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.life-progress-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.life-progress-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  min-width: 4rem;
+}
+
+.life-progress-input {
+  flex: 1;
+  padding: 0.45rem 0.55rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.life-progress-input:hover {
+  border-color: var(--border-hover);
+}
+
+.life-progress-input:focus {
+  border-color: var(--accent);
+}
+
+.life-progress-meter {
+  width: 100%;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.18);
+  overflow: hidden;
+}
+
+.life-progress-fill {
+  --life-progress-lockdown-share: 0%;
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    #10b981 0 var(--life-progress-lockdown-share),
+    #f59e0b var(--life-progress-lockdown-share) 100%
+  );
+  box-shadow: 0 0 10px rgba(5, 150, 105, 0.22);
+}
+
+.life-progress-detail {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
 .week-start-setting {
   display: flex;
   align-items: center;
@@ -990,6 +1216,26 @@ body {
 .day-labels > span {
   position: relative;
   cursor: pointer;
+}
+
+.day-label-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  line-height: 1.1;
+}
+
+.day-label-date {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-muted);
+}
+
+.day-label-name {
+  font-size: 0.75rem;
 }
 
 .day-label-selected {

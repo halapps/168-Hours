@@ -4,6 +4,9 @@
   var STORAGE_KEY = '168hours-week-schedules-v1';
   var SELECTED_WEEK_KEY = '168hours-selected-week-v1';
   var RECURRING_KEY = '168hours-row-recurring-v1';
+  var LIFE_BIRTHDATE_KEY = '168hours-life-birthdate-v1';
+  var US_LIFE_EXPECTANCY_YEARS = 79.0;
+  var COVID_LOCKDOWN_DATE = new Date(2020, 2, 13);
   var isApplyingWeek = false;
   var statusTimerId = null;
 
@@ -166,6 +169,7 @@
         if (!entry || typeof entry !== 'object') return;
         weeks[weekId] = {
           weekId: weekId,
+          isSaved: entry.isSaved !== false,
           savedAt: typeof entry.savedAt === 'string' ? entry.savedAt : new Date().toISOString(),
           state: safeStateClone(entry.state),
           history: safeHistoryClone(entry.history)
@@ -275,19 +279,29 @@
     return next;
   }
 
-  function saveCurrentWeek() {
+  function persistCurrentWeekSnapshot() {
     if (!selectedWeekId) return;
+    var existing = store.weeks[selectedWeekId];
     store.weeks[selectedWeekId] = {
       weekId: selectedWeekId,
-      savedAt: new Date().toISOString(),
+      isSaved: Boolean(existing && existing.isSaved),
+      savedAt: existing && typeof existing.savedAt === 'string' ? existing.savedAt : new Date().toISOString(),
       state: safeStateClone(window.Y),
       history: safeHistoryClone(window.N)
     };
     saveStore(store);
   }
 
+  function saveCurrentWeek() {
+    if (!selectedWeekId) return;
+    persistCurrentWeekSnapshot();
+    store.weeks[selectedWeekId].isSaved = true;
+    store.weeks[selectedWeekId].savedAt = new Date().toISOString();
+    saveStore(store);
+  }
+
   function flushCurrentWeek() {
-    saveCurrentWeek();
+    persistCurrentWeekSnapshot();
     persistSelectedWeek();
   }
 
@@ -308,6 +322,7 @@
     }
     store.weeks[weekId] = {
       weekId: weekId,
+      isSaved: Boolean(config.isSaved),
       savedAt: new Date().toISOString(),
       state: nextState,
       history: seedHistory ? safeHistoryClone(seedHistory) : createEmptyHistory()
@@ -316,14 +331,9 @@
   }
 
   function openAdjacentWeek(delta) {
-    if (!isFutureWeek(selectedWeekId)) {
-      syncRecurringRowsFromCurrentState();
-    }
     var targetWeekId = shiftWeekId(selectedWeekId, delta);
-    var createdNewWeek = false;
     if (!store.weeks[targetWeekId] && delta > 0) {
       ensureWeekExists(targetWeekId, buildNewWeekState(), createEmptyHistory(), { applyRecurringRows: true });
-      createdNewWeek = true;
     }
     applyWeek(targetWeekId);
   }
@@ -373,7 +383,9 @@
   }
 
   function sortedWeekIds() {
-    return Object.keys(store.weeks).sort(function (a, b) {
+    return Object.keys(store.weeks).filter(function (weekId) {
+      return store.weeks[weekId] && store.weeks[weekId].isSaved;
+    }).sort(function (a, b) {
       return b.localeCompare(a);
     });
   }
@@ -533,11 +545,203 @@
     statusTimerId = window.setInterval(renderWeekStatus, 15000);
   }
 
+  function isLeapYear(year) {
+    return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+  }
+
+  function getYearProgressInfo() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var totalDays = isLeapYear(year) ? 366 : 365;
+    var start = new Date(year, 0, 1);
+    start.setHours(0, 0, 0, 0);
+    var today = new Date(year, now.getMonth(), now.getDate());
+    var passedDays = Math.floor((today.getTime() - start.getTime()) / 86400000) + 1;
+    passedDays = Math.max(1, Math.min(totalDays, passedDays));
+
+    return {
+      year: year,
+      totalDays: totalDays,
+      passedDays: passedDays,
+      leftDays: Math.max(0, totalDays - passedDays)
+    };
+  }
+
+  function renderYearProgress() {
+    var card = document.getElementById('year-progress-card');
+    var grid = document.getElementById('year-progress-grid');
+    var passed = document.getElementById('year-progress-passed');
+    var left = document.getElementById('year-progress-left');
+    var label = document.getElementById('year-progress-label');
+    if (!card || !grid || !passed || !left || !label) return;
+
+    var info = getYearProgressInfo();
+    label.textContent = info.year + ' progress';
+    passed.textContent = info.passedDays + ' passed';
+    left.textContent = info.leftDays + ' left';
+
+    replaceChildren(grid, Array.from({ length: info.totalDays }, function (_, index) {
+      var cell = document.createElement('span');
+      cell.className = 'year-progress-cell' + (index < info.passedDays ? ' is-passed' : '');
+      return cell;
+    }));
+  }
+
+  function loadLifeBirthdate() {
+    try {
+      var raw = localStorage.getItem(LIFE_BIRTHDATE_KEY);
+      if (raw == null || raw === '') return '';
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(raw)) return '';
+      return raw;
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function saveLifeBirthdate(value) {
+    try {
+      if (value === '') {
+        localStorage.removeItem(LIFE_BIRTHDATE_KEY);
+        return;
+      }
+      localStorage.setItem(LIFE_BIRTHDATE_KEY, String(value));
+    } catch (_) {
+      /* ignore storage failures */
+    }
+  }
+
+  function getAgeFromBirthdate(value) {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+    var parts = value.split('-').map(Number);
+    var birthdate = new Date(parts[0], parts[1] - 1, parts[2]);
+    if (Number.isNaN(birthdate.getTime())) return null;
+
+    var today = new Date();
+    var current = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    if (birthdate.getTime() > current.getTime()) return null;
+
+    var ageYears = current.getFullYear() - birthdate.getFullYear();
+    var birthMonth = birthdate.getMonth();
+    var birthDay = birthdate.getDate();
+    if (
+      current.getMonth() < birthMonth ||
+      (current.getMonth() === birthMonth && current.getDate() < birthDay)
+    ) {
+      ageYears -= 1;
+    }
+
+    var lastBirthday = new Date(current.getFullYear(), birthMonth, birthDay);
+    if (lastBirthday.getTime() > current.getTime()) {
+      lastBirthday = new Date(current.getFullYear() - 1, birthMonth, birthDay);
+    }
+    var nextBirthday = new Date(lastBirthday.getFullYear() + 1, birthMonth, birthDay);
+    var yearSpanDays = Math.max(1, Math.round((nextBirthday.getTime() - lastBirthday.getTime()) / 86400000));
+    var daysSinceBirthday = Math.max(0, Math.round((current.getTime() - lastBirthday.getTime()) / 86400000));
+
+    return {
+      years: ageYears,
+      preciseYears: ageYears + (daysSinceBirthday / yearSpanDays)
+    };
+  }
+
+  function getPreciseAgeAtDate(birthdate, targetDate) {
+    if (!(birthdate instanceof Date) || Number.isNaN(birthdate.getTime())) return null;
+    if (!(targetDate instanceof Date) || Number.isNaN(targetDate.getTime())) return null;
+    if (targetDate.getTime() < birthdate.getTime()) return 0;
+
+    var current = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+    var ageYears = current.getFullYear() - birthdate.getFullYear();
+    var birthMonth = birthdate.getMonth();
+    var birthDay = birthdate.getDate();
+    if (
+      current.getMonth() < birthMonth ||
+      (current.getMonth() === birthMonth && current.getDate() < birthDay)
+    ) {
+      ageYears -= 1;
+    }
+
+    var lastBirthday = new Date(current.getFullYear(), birthMonth, birthDay);
+    if (lastBirthday.getTime() > current.getTime()) {
+      lastBirthday = new Date(current.getFullYear() - 1, birthMonth, birthDay);
+    }
+    var nextBirthday = new Date(lastBirthday.getFullYear() + 1, birthMonth, birthDay);
+    var yearSpanDays = Math.max(1, Math.round((nextBirthday.getTime() - lastBirthday.getTime()) / 86400000));
+    var daysSinceBirthday = Math.max(0, Math.round((current.getTime() - lastBirthday.getTime()) / 86400000));
+    return ageYears + (daysSinceBirthday / yearSpanDays);
+  }
+
+  function renderLifeProgress() {
+    var input = document.getElementById('life-birthdate-input');
+    var ageNode = document.getElementById('life-progress-age');
+    var percentNode = document.getElementById('life-progress-percent');
+    var detailNode = document.getElementById('life-progress-detail');
+    var expectancyNode = document.getElementById('life-progress-expectancy');
+    var lockdownNode = document.getElementById('life-progress-lockdown');
+    var visualNode = document.getElementById('life-progress-visual');
+    var meterFill = document.getElementById('life-progress-fill');
+    if (!input || !ageNode || !percentNode || !detailNode || !expectancyNode || !lockdownNode || !visualNode || !meterFill) return;
+
+    expectancyNode.textContent = 'Using U.S. average life expectancy: ' + US_LIFE_EXPECTANCY_YEARS.toFixed(1) + ' years';
+    lockdownNode.textContent = 'Orange shows life since Mar 13, 2020.';
+
+    var ageInfo = getAgeFromBirthdate(input.value);
+    if (!ageInfo) {
+      ageNode.textContent = '-- years';
+      percentNode.textContent = '--%';
+      detailNode.textContent = 'Enter your birthdate to estimate life lived.';
+      visualNode.style.setProperty('--life-progress', '0%');
+      visualNode.style.setProperty('--life-progress-lockdown-start', '0%');
+      meterFill.style.width = '0%';
+      meterFill.style.setProperty('--life-progress-lockdown-share', '0%');
+      return;
+    }
+
+    var age = ageInfo.preciseYears;
+    var percent = Math.max(0, Math.min(100, (age / US_LIFE_EXPECTANCY_YEARS) * 100));
+    var birthParts = input.value.split('-').map(Number);
+    var birthdate = new Date(birthParts[0], birthParts[1] - 1, birthParts[2]);
+    var lockdownAge = getPreciseAgeAtDate(birthdate, COVID_LOCKDOWN_DATE);
+    var lockdownPercent = Math.max(0, Math.min(percent, (lockdownAge / US_LIFE_EXPECTANCY_YEARS) * 100));
+    var lockdownShare = percent > 0 ? (lockdownPercent / percent) * 100 : 0;
+    var yearsLeft = Math.max(0, US_LIFE_EXPECTANCY_YEARS - age);
+    ageNode.textContent = age.toFixed(1) + ' years old';
+    percentNode.textContent = percent.toFixed(1) + '%';
+    detailNode.textContent = 'Completed birthdays: ' + ageInfo.years + ' · ' + yearsLeft.toFixed(1) + ' years left at the current average.';
+    visualNode.style.setProperty('--life-progress', percent + '%');
+    visualNode.style.setProperty('--life-progress-lockdown-start', lockdownPercent + '%');
+    meterFill.style.width = percent + '%';
+    meterFill.style.setProperty('--life-progress-lockdown-share', lockdownShare + '%');
+  }
+
   function getVisibleDayCount() {
     if (typeof window.k0Q === 'function') {
       return Math.max(1, Math.min(7, Number(window.k0Q()) || 7));
     }
     return 7;
+  }
+
+  function formatHeaderDate(date) {
+    return (date.getMonth() + 1) + '/' + date.getDate();
+  }
+
+  function renderDayLabelsWithDates() {
+    var dayLabels = document.getElementById('day-labels');
+    if (!dayLabels) return;
+
+    var labels = typeof window.CQ === 'function' ? window.CQ() : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    var startDate = dateFromWeekId(selectedWeekId) || startOfWeek(new Date());
+    var dayCount = Math.max(1, Math.min(labels.length, getVisibleDayCount()));
+
+    replaceChildren(dayLabels, labels.slice(0, dayCount).map(function (label, index) {
+      var date = new Date(startDate);
+      date.setDate(startDate.getDate() + index);
+
+      var item = document.createElement('span');
+      item.className = 'day-label-stack';
+      item.appendChild(buildTextSpan('day-label-date', formatHeaderDate(date)));
+      item.appendChild(buildTextSpan('day-label-name', label));
+      return item;
+    }));
   }
 
   function getGridCells() {
@@ -603,15 +807,40 @@
     renderRecurringButtons();
   }
 
-  function syncRecurringRowsFromCurrentState() {
-    var labels = Array.from(document.querySelectorAll('#hour-labels .hour-label'));
-    if (!labels.length) return;
+  function rowMatchesRecurringTemplate(rowIndex) {
+    var hourKey = getRowHourKey(rowIndex);
+    if (!Number.isInteger(hourKey)) return false;
+    var template = recurringRows[String(hourKey)];
+    if (!template || !Array.isArray(template.cells)) return false;
 
-    labels.forEach(function (_, rowIndex) {
-      var hourKey = getRowHourKey(rowIndex);
-      if (!Number.isInteger(hourKey) || !recurringRows[String(hourKey)]) return;
-      captureRecurringRow(rowIndex);
-    });
+    var rowCells = getRowCells(rowIndex);
+    if (rowCells.length !== template.cells.length) return false;
+
+    for (var i = 0; i < rowCells.length; i++) {
+      var cell = rowCells[i];
+      var templateCell = template.cells[i];
+      var index = Number(cell.dataset.index);
+      if (!Number.isInteger(index) || index < 0 || index >= 168) return false;
+      if (!templateCell || Number(templateCell.index) !== index) return false;
+
+      var cellChunks = (window.Y.cellChunks && window.Y.cellChunks[index]) || 1;
+      var gridValue = (window.Y.grid && window.Y.grid[index]) || 'unassigned';
+      var gridChunks = cellChunks === 1
+        ? [gridValue]
+        : ((window.Y.gridChunks && window.Y.gridChunks[index]) || [gridValue]);
+      var liveChunks = Array.isArray(gridChunks) ? gridChunks.slice(0, cellChunks) : [gridChunks || 'unassigned'];
+      var savedChunks = Array.isArray(templateCell.gridChunks) ? templateCell.gridChunks.slice(0, templateCell.cellChunks || 1) : [templateCell.grid || 'unassigned'];
+
+      if (cellChunks !== Number(templateCell.cellChunks || 1)) return false;
+      if ((gridValue || 'unassigned') !== (templateCell.grid || 'unassigned')) return false;
+      if (liveChunks.length !== savedChunks.length) return false;
+
+      for (var c = 0; c < liveChunks.length; c++) {
+        if ((liveChunks[c] || 'unassigned') !== (savedChunks[c] || 'unassigned')) return false;
+      }
+    }
+
+    return true;
   }
 
   function renderRecurringButtons() {
@@ -637,22 +866,23 @@
         button = document.createElement('button');
         button.type = 'button';
         button.className = 'hour-recurring-btn';
-        button.innerHTML = '<span class="hour-recurring-checkbox" aria-hidden="true"><span class="hour-recurring-checkbox-mark">\u2713</span></span><span class="hour-recurring-text">recurring</span>';
+        button.innerHTML = '<span class="hour-recurring-checkbox" aria-hidden="true"><span class="hour-recurring-checkbox-mark">\u2713</span></span><span class="hour-recurring-text">save</span>';
         label.appendChild(button);
       }
 
       button.dataset.rowIndex = String(rowIndex);
-      var hourKey = getRowHourKey(rowIndex);
-      var isActive = Number.isInteger(hourKey) && Boolean(recurringRows[String(hourKey)]);
+      var isActive = rowMatchesRecurringTemplate(rowIndex);
       button.classList.toggle('active', isActive);
       button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-      button.title = isActive ? 'Remove recurring row for future weeks' : 'Save this row for future new weeks';
+      button.title = isActive ? 'Remove saved row pattern' : 'Save this row pattern';
     });
   }
 
   function buildUI() {
     var headerActions = document.querySelector('.header-actions');
     var navTitle = document.querySelector('.nav-title');
+    var sidebarContent = document.querySelector('.sidebar-content');
+    var weekStartSection = document.querySelector('.week-start-section');
     if (!headerActions) return;
     if (document.getElementById('week-schedules-bar')) return;
 
@@ -729,6 +959,67 @@
     bar.appendChild(main);
     bar.appendChild(saveButton);
     headerActions.insertBefore(bar, headerActions.firstChild);
+
+    if (sidebarContent && weekStartSection && !document.getElementById('year-progress-card')) {
+      var yearCard = document.createElement('section');
+      yearCard.className = 'year-progress-card';
+      yearCard.id = 'year-progress-card';
+      yearCard.innerHTML = [
+        '<div class="year-progress-head">',
+        '  <div class="year-progress-title-wrap">',
+        '    <span class="year-progress-title">Days Passed In The Year</span>',
+        '    <span class="year-progress-label" id="year-progress-label"></span>',
+        '  </div>',
+        '  <div class="year-progress-stats">',
+        '    <span class="year-progress-stat year-progress-stat-passed" id="year-progress-passed"></span>',
+        '    <span class="year-progress-stat" id="year-progress-left"></span>',
+        '  </div>',
+        '</div>',
+        '<div class="year-progress-grid" id="year-progress-grid" aria-label="Year progress grid"></div>'
+      ].join('');
+      sidebarContent.insertBefore(yearCard, weekStartSection);
+    }
+    renderYearProgress();
+
+    if (sidebarContent && weekStartSection && !document.getElementById('life-progress-card')) {
+      var lifeCard = document.createElement('section');
+      lifeCard.className = 'life-progress-card';
+      lifeCard.id = 'life-progress-card';
+      lifeCard.innerHTML = [
+        '<div class="life-progress-head">',
+        '  <div class="life-progress-title-wrap">',
+        '    <span class="life-progress-title">Percentage Of Life Lived</span>',
+        '    <span class="life-progress-expectancy" id="life-progress-expectancy"></span>',
+        '    <span class="life-progress-lockdown" id="life-progress-lockdown"></span>',
+        '    <span class="life-progress-age" id="life-progress-age"></span>',
+        '  </div>',
+        '  <div class="life-progress-visual" id="life-progress-visual" aria-hidden="true">',
+        '    <div class="life-progress-visual-inner">',
+        '      <span class="life-progress-percent" id="life-progress-percent"></span>',
+        '      <span class="life-progress-visual-label">lived</span>',
+        '    </div>',
+        '  </div>',
+        '</div>',
+        '<label class="life-progress-input-wrap" for="life-birthdate-input">',
+        '  <span class="life-progress-label">Birthdate</span>',
+        '  <input id="life-birthdate-input" class="life-progress-input" type="date">',
+        '</label>',
+        '<div class="life-progress-meter" aria-hidden="true"><span class="life-progress-fill" id="life-progress-fill"></span></div>',
+        '<div class="life-progress-detail" id="life-progress-detail"></div>'
+      ].join('');
+      sidebarContent.insertBefore(lifeCard, weekStartSection);
+
+      var lifeBirthdateInput = document.getElementById('life-birthdate-input');
+      if (lifeBirthdateInput) {
+        lifeBirthdateInput.max = new Date().toISOString().slice(0, 10);
+        lifeBirthdateInput.value = loadLifeBirthdate();
+        lifeBirthdateInput.addEventListener('input', function () {
+          saveLifeBirthdate(lifeBirthdateInput.value.trim());
+          renderLifeProgress();
+        });
+      }
+    }
+    renderLifeProgress();
 
     if (saveButton) {
       saveButton.addEventListener('click', function () {
@@ -850,6 +1141,7 @@
   function renderWeekUI() {
     var currentButton = document.getElementById('week-current-btn');
     var list = document.getElementById('week-schedule-list');
+    var saveButton = document.getElementById('save-week-btn');
     if (!currentButton || !list) return;
 
     var relative = relativeWeekLabel(selectedWeekId);
@@ -862,15 +1154,23 @@
     replaceChildren(list, ids.map(function (weekId) {
       return buildWeekScheduleEntry(weekId, weekId === selectedWeekId);
     }));
+    if (saveButton) {
+      var currentEntry = store.weeks[selectedWeekId];
+      var isSaved = Boolean(currentEntry && currentEntry.isSaved);
+      saveButton.textContent = isSaved ? 'Saved Week' : 'Save Week';
+      saveButton.classList.toggle('active', isSaved);
+      saveButton.setAttribute('aria-pressed', isSaved ? 'true' : 'false');
+      saveButton.title = isSaved ? 'This week is saved' : 'Save this week';
+    }
     renderWeekStatus();
+    renderYearProgress();
+    renderLifeProgress();
   }
 
   window.L = function () {
     var result = originalL.apply(this, arguments);
+    renderDayLabelsWithDates();
     if (!isApplyingWeek) {
-      if (!isFutureWeek(selectedWeekId)) {
-        syncRecurringRowsFromCurrentState();
-      }
       flushCurrentWeek();
       renderWeekUI();
     }
@@ -881,9 +1181,6 @@
   window.OJ = function (state) {
     var result = originalOJ ? originalOJ.call(this, state) : undefined;
     if (!isApplyingWeek) {
-      if (!isFutureWeek(selectedWeekId)) {
-        syncRecurringRowsFromCurrentState();
-      }
       flushCurrentWeek();
       renderWeekUI();
     }
@@ -893,6 +1190,7 @@
 
   window.M = function () {
     var result = originalM.apply(this, arguments);
+    renderDayLabelsWithDates();
     renderRecurringButtons();
     return result;
   };
