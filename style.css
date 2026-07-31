@@ -124,29 +124,6 @@ body {
   min-width: 0;
 }
 
-.type-total-pill {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  line-height: 1;
-  padding: 0.2rem 0.35rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-
-.type-totals-side {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  padding: 0.5rem 0.1rem 0 0.1rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--bg-card);
-  overflow: hidden;
-}
-
 .header-actions {
   display: flex;
   flex-wrap: wrap;
@@ -381,29 +358,6 @@ body {
   margin-top: 0.5rem;
 }
 
-.type-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.type-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
-.type-pill {
-  font-size: 0.65rem;
-  line-height: 1;
-  padding: 0.3rem 0.45rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  background: var(--bg-card);
-}
-
 .btn-secondary {
   border-color: var(--border);
   color: var(--text-secondary);
@@ -562,28 +516,6 @@ body {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   color: var(--text-muted);
-}
-
-.category-type-tags{display:flex;flex-wrap:wrap;gap:0.2rem;margin-top:0.28rem;opacity:0.9}
-.category-type-tag{font-family:var(--font-sans);font-size:0.56rem;line-height:1;border:1px solid rgba(0,0,0,0.08);border-radius:999px;background:rgba(0,0,0,0.02);color:var(--text-muted);padding:0.1rem 0.28rem;cursor:pointer}
-.category-type-tag:hover{border-color:var(--border);color:var(--text-secondary);background:rgba(0,0,0,0.04)}
-.category-type-tag.active{border-color:rgba(37,99,235,0.35);color:#1d4ed8;background:rgba(59,130,246,0.12)}
-
-.category-type-select {
-  margin-top: 0.35rem;
-  width: 100%;
-  font-family: var(--font-sans);
-  font-size: 0.68rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  padding: 0.2rem 0.35rem;
-}
-
-.category-type-select:focus {
-  outline: none;
-  border-color: var(--accent);
 }
 
 .category-randomize {
@@ -1644,11 +1576,6 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .type-totals-side {
-    width: 100%;
-    padding-top: 0.35rem;
-  }
-  
   .header-actions {
     flex-wrap: wrap;
     gap: 0.375rem;
