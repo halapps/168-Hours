@@ -230,6 +230,7 @@
     var grid = document.getElementById('grid');
     var addTagBtn = document.getElementById('add-time-tag-btn');
     var tagList = document.getElementById('time-tag-list');
+    var legend = document.getElementById('legend');
 
     if (grid) {
       grid.addEventListener('mousedown', function (evt) {
@@ -272,6 +273,15 @@
           renderTimeTags();
         }
       });
+    }
+
+    if (legend) {
+      legend.addEventListener('click', function (evt) {
+        var limitBtn = evt.target.closest('.category-limit');
+        if (!limitBtn) return;
+        evt.preventDefault();
+        evt.stopPropagation();
+      }, true);
     }
 
     var rerender = function () {

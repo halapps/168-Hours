@@ -66,6 +66,7 @@ var w="unassigned";function NQ(){let J=Math.random(),Q=0.65+Math.random()*0.2,q=
           <path d="m15 5 4 4"/>
         </svg>
       </button>`:""}
+      ${!J.isUnassigned?`<button class="category-limit" data-id="${J.category.id}" title="Limit category">Limit</button>`:""}
       ${!J.isUnassigned?`<button class="category-delete" data-id="${J.category.id}" title="Delete category">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 6L6 18M6 6l12 12"/>
