@@ -575,6 +575,22 @@
     return 'season-autumn';
   }
 
+  function getBirthdayDayOfYear(value, year) {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+    var parts = value.split('-').map(Number);
+    var month = parts[1];
+    var day = parts[2];
+    if (month === 2 && day === 29 && !isLeapYear(year)) {
+      day = 28;
+    }
+    var birthday = new Date(year, month - 1, day);
+    if (Number.isNaN(birthday.getTime())) return null;
+    var start = new Date(year, 0, 1);
+    start.setHours(0, 0, 0, 0);
+    birthday.setHours(0, 0, 0, 0);
+    return Math.floor((birthday.getTime() - start.getTime()) / 86400000) + 1;
+  }
+
   function renderYearProgress() {
     var card = document.getElementById('year-progress-card');
     var grid = document.getElementById('year-progress-grid');
@@ -584,6 +600,8 @@
     if (!card || !grid || !passed || !left || !label) return;
 
     var info = getYearProgressInfo();
+    var lifeBirthdate = loadLifeBirthdate();
+    var birthdayDayOfYear = getBirthdayDayOfYear(lifeBirthdate, info.year);
     label.textContent = info.year + ' progress';
     passed.textContent = info.passedDays + ' passed';
     left.textContent = info.leftDays + ' left';
@@ -593,6 +611,13 @@
       var className = 'year-progress-cell ' + getSeasonClassForDay(index, info.totalDays);
       if (index < info.passedDays) {
         className += ' is-passed';
+      }
+      if (birthdayDayOfYear === index + 1) {
+        className += ' is-birthday';
+        if (lifeBirthdate) {
+          cell.dataset.birthdate = lifeBirthdate;
+          cell.setAttribute('aria-label', 'Birthdate: ' + lifeBirthdate);
+        }
       }
       cell.className = className;
       return cell;
@@ -1027,6 +1052,7 @@
         lifeBirthdateInput.value = loadLifeBirthdate();
         lifeBirthdateInput.addEventListener('input', function () {
           saveLifeBirthdate(lifeBirthdateInput.value.trim());
+          renderYearProgress();
           renderLifeProgress();
         });
       }

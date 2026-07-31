@@ -701,6 +701,7 @@ body {
   display: grid;
   grid-template-columns: repeat(24, minmax(0, 1fr));
   gap: 2px;
+  overflow: visible;
 }
 
 .year-progress-cell {
@@ -750,6 +751,46 @@ body {
 
 .year-progress-cell.is-passed.season-autumn {
   background: linear-gradient(180deg, #fb923c, #ea580c);
+}
+
+.year-progress-cell.is-birthday {
+  position: relative;
+  border-color: transparent;
+  background: #facc15;
+  box-shadow: none;
+  z-index: 1;
+}
+
+.year-progress-cell.is-passed.is-birthday {
+  background: #facc15;
+  box-shadow: none;
+}
+
+.year-progress-cell.is-birthday::after {
+  content: "Birthdate: " attr(data-birthdate);
+  position: absolute;
+  left: calc(50% + 20px);
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%) translateY(4px);
+  padding: 0.3rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.94);
+  color: #fff8dc;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.18);
+  transition: opacity 140ms ease, transform 140ms ease;
+  z-index: 5;
+}
+
+.year-progress-cell.is-birthday:hover::after,
+.year-progress-cell.is-birthday:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .life-progress-card {
