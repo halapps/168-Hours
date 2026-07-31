@@ -707,11 +707,49 @@ body {
   width: 100%;
   aspect-ratio: 1;
   border-radius: 2px;
-  background: rgba(148, 163, 184, 0.22);
+  border: 1px solid transparent;
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.year-progress-cell.season-winter {
+  border-color: rgba(37, 99, 235, 0.22);
+  background: rgba(96, 165, 250, 0.1);
+}
+
+.year-progress-cell.season-spring {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.year-progress-cell.season-summer {
+  border-color: rgba(220, 38, 38, 0.22);
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.year-progress-cell.season-autumn {
+  border-color: rgba(234, 88, 12, 0.22);
+  background: rgba(251, 146, 60, 0.1);
 }
 
 .year-progress-cell.is-passed {
-  background: linear-gradient(180deg, #2563eb, #1d4ed8);
+  border-color: transparent;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.year-progress-cell.is-passed.season-winter {
+  background: linear-gradient(180deg, #60a5fa, #2563eb);
+}
+
+.year-progress-cell.is-passed.season-spring {
+  background: linear-gradient(180deg, #4ade80, #16a34a);
+}
+
+.year-progress-cell.is-passed.season-summer {
+  background: linear-gradient(180deg, #ef4444, #dc2626);
+}
+
+.year-progress-cell.is-passed.season-autumn {
+  background: linear-gradient(180deg, #fb923c, #ea580c);
 }
 
 .life-progress-card {

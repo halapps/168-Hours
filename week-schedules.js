@@ -567,6 +567,14 @@
     };
   }
 
+  function getSeasonClassForDay(dayIndex, totalDays) {
+    var dayOfYear = dayIndex + 1;
+    if (dayOfYear <= 79 || dayOfYear >= 355) return 'season-winter';
+    if (dayOfYear <= 171) return 'season-spring';
+    if (dayOfYear <= 263) return 'season-summer';
+    return 'season-autumn';
+  }
+
   function renderYearProgress() {
     var card = document.getElementById('year-progress-card');
     var grid = document.getElementById('year-progress-grid');
@@ -582,7 +590,11 @@
 
     replaceChildren(grid, Array.from({ length: info.totalDays }, function (_, index) {
       var cell = document.createElement('span');
-      cell.className = 'year-progress-cell' + (index < info.passedDays ? ' is-passed' : '');
+      var className = 'year-progress-cell ' + getSeasonClassForDay(index, info.totalDays);
+      if (index < info.passedDays) {
+        className += ' is-passed';
+      }
+      cell.className = className;
       return cell;
     }));
   }
