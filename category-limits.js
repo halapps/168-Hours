@@ -215,6 +215,7 @@
         var currentHours = getScheduledHours(window.Y, categoryId);
         var progress = getPercent(currentHours, limit);
 
+        button.style.display = '';
         button.textContent = formatLimitHours(limit);
         button.title = 'Weekly limit: ' + formatLimitHours(limit) + ' (click to edit)';
         button.classList.add('active');
@@ -256,6 +257,7 @@
             var currentGoalHours = getScheduledHours(window.Y, categoryId);
             var goalProgress = getPercent(currentGoalHours, goal);
 
+            button.style.display = 'none';
             goalButton.textContent = formatLimitHours(goal);
             goalButton.title = 'Weekly goal: ' + formatLimitHours(goal) + ' (click to edit)';
             goalButton.classList.add('active');
@@ -276,11 +278,14 @@
               ) + 'h of ' + formatLimitHours(goal);
             }
           } else {
+            button.style.display = '';
             goalButton.textContent = 'Goal';
             goalButton.title = 'Set weekly goal';
             goalButton.classList.remove('active');
             if (existingGoalIndicator) existingGoalIndicator.remove();
           }
+        } else {
+          button.style.display = '';
         }
       }
     });
