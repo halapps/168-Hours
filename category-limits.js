@@ -58,6 +58,17 @@
     return normalized % 1 === 0 ? normalized + 'h' : normalized.toFixed(2).replace(/0+$/, '').replace(/\.$/, '') + 'h';
   }
 
+  function getPercent(current, limit) {
+    if (!Number.isFinite(limit) || limit <= 0) return 0;
+    return Math.max(0, Math.min(1, current / limit));
+  }
+
+  function getProgressColor(progress) {
+    if (progress >= 1) return '#dc2626';
+    if (progress >= 0.6) return '#eab308';
+    return '#16a34a';
+  }
+
   function getCellChunks(state, index) {
     var chunkCount = (state && state.cellChunks && state.cellChunks[index]) || 1;
     var baseValue = (state && state.grid && state.grid[index]) || 'unassigned';
@@ -145,14 +156,37 @@
     Array.from(document.querySelectorAll('.category-limit')).forEach(function (button) {
       var categoryId = button.getAttribute('data-id');
       var limit = limits[categoryId];
+      var row = button.closest('.category-item');
+      var existingIndicator = row ? row.querySelector('.category-limit-progress') : null;
+
       if (Number.isFinite(limit)) {
+        var currentHours = getScheduledHours(window.Y, categoryId);
+        var progress = getPercent(currentHours, limit);
+
         button.textContent = formatLimitHours(limit);
         button.title = 'Weekly limit: ' + formatLimitHours(limit) + ' (click to edit)';
         button.classList.add('active');
+
+        if (row && !existingIndicator) {
+          existingIndicator = document.createElement('span');
+          existingIndicator.className = 'category-limit-progress';
+          existingIndicator.setAttribute('aria-hidden', 'true');
+          row.appendChild(existingIndicator);
+        }
+
+        if (existingIndicator) {
+          row.appendChild(existingIndicator);
+          existingIndicator.style.setProperty('--limit-progress', String(progress));
+          existingIndicator.style.setProperty('--limit-progress-color', getProgressColor(progress));
+          existingIndicator.title = (
+            Math.round(currentHours * 100) / 100
+          ) + 'h of ' + formatLimitHours(limit);
+        }
       } else {
         button.textContent = 'Limit';
         button.title = 'Set weekly limit';
         button.classList.remove('active');
+        if (existingIndicator) existingIndicator.remove();
       }
     });
   }
